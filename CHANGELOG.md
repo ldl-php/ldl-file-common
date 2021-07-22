@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - feature/1200442297082017 - Add ResetValidatorInterface to HasRegexContentValidator
 - feature/1200375818876653 - Add description to validators (fix wrong +rb read mode on HasRegexContentValidator)
 - feature/1200203297621236 - Normalize file validators and collections
+- feature/1200637529087859 - Use ComparisonOperatorHelper on FileSizeValidator
 
 ### Changed
 

@@ -7,17 +7,12 @@ use LDL\Validators\Traits\NegatedValidatorTrait;
 use LDL\Validators\Traits\ValidatorValidateTrait;
 use LDL\Validators\ValidatorHasConfigInterface;
 use LDL\Validators\ValidatorInterface;
+use LDL\Framework\Helper\ComparisonOperatorHelper;
 
 class FileSizeValidator implements ValidatorInterface, NegatedValidatorInterface, ValidatorHasConfigInterface
 {
     use ValidatorValidateTrait;
     use NegatedValidatorTrait;
-
-    public const OPERATOR_EQ='eq';
-    public const OPERATOR_GT='gt';
-    public const OPERATOR_GTE='gte';
-    public const OPERATOR_LT='lt';
-    public const OPERATOR_LTE='lte';
 
     /**
      * @var int
@@ -42,25 +37,7 @@ class FileSizeValidator implements ValidatorInterface, NegatedValidatorInterface
     )
     {
         $operator = strtolower($operator);
-
-        $validOperators = [
-            self::OPERATOR_GT,
-            self::OPERATOR_GTE,
-            self::OPERATOR_LT,
-            self::OPERATOR_LTE,
-            self::OPERATOR_EQ,
-        ];
-
-        $isValidaOperator = in_array($operator, $validOperators, true);
-
-        if(!$isValidaOperator){
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Invalid comparison operator: %s, valid operators are: ',
-                    implode(',', $validOperators)
-                )
-            );
-        }
+        ComparisonOperatorHelper::validate($operator);
 
         $this->operator = $operator;
         $this->bytes = $bytes;
@@ -104,28 +81,8 @@ class FileSizeValidator implements ValidatorInterface, NegatedValidatorInterface
     {
         $size = filesize($path);
 
-        switch($this->operator){
-
-            case self::OPERATOR_EQ:
-                if($size === $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_GT:
-                if($size > $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_GTE:
-                if($size >= $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_LT:
-                if($size < $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_LTE:
-                if($size <= $this->bytes){
-                    return;
-                }
+        if(ComparisonOperatorHelper::compare($size, $this->bytes, $this->operator)){
+            return;
         }
 
         throw new \LogicException(
@@ -143,33 +100,13 @@ class FileSizeValidator implements ValidatorInterface, NegatedValidatorInterface
     {
         $size = filesize($path);
 
-        switch($this->operator){
-
-            case self::OPERATOR_EQ:
-                if($size !== $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_GT:
-                if($size < $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_GTE:
-                if($size <= $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_LT:
-                if($size > $this->bytes){
-                    return;
-                }
-            case self::OPERATOR_LTE:
-                if($size >= $this->bytes){
-                    return;
-                }
+        if(ComparisonOperatorHelper::compareInverse($size, $this->bytes, $this->operator)){
+            return;
         }
 
         throw new \LogicException(
             sprintf(
-                'File size of: "%s" (size: %s), is "%s" than %s bytes',
+                'File size of: "%s" (size: %s), is NOT "%s" than %s bytes',
                 $path,
                 $size,
                 $this->operator,
