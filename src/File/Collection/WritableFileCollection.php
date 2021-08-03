@@ -16,8 +16,11 @@ final class WritableFileCollection extends AbstractCollection
         parent::__construct($items);
 
         $this->getAppendValueValidatorChain()
-            ->append(new FileExistsValidator())
-            ->append(new WritableFileValidator())
+            ->getChainItems()
+            ->appendMany([
+                new FileExistsValidator(),
+                new WritableFileValidator()
+            ])
             ->lock();
     }
 }

@@ -16,8 +16,11 @@ final class ReadableFileCollection extends AbstractCollection
         parent::__construct($items);
 
         $this->getAppendValueValidatorChain()
-            ->append(new FileExistsValidator())
-            ->append(new ReadableFileValidator())
+            ->getChainItems()
+            ->appendMany([
+                new FileExistsValidator(),
+                new ReadableFileValidator()
+            ])
             ->lock();
     }
 }

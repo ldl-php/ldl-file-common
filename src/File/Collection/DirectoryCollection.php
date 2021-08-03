@@ -15,6 +15,7 @@ final class DirectoryCollection extends AbstractCollection
         parent::__construct($items);
 
         $this->getAppendValueValidatorChain()
+            ->getChainItems()
             ->append(new FileTypeValidator([FileTypeValidator::FILE_TYPE_DIRECTORY]))
             ->lock();
     }

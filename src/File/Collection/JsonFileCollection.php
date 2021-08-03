@@ -17,9 +17,12 @@ final class JsonFileCollection extends AbstractCollection
         parent::__construct($items);
 
         $this->getAppendValueValidatorChain()
-            ->append(new FileExistsValidator())
-            ->append(new ReadableFileValidator())
-            ->append(new JsonFileValidator())
+            ->getChainItems()
+            ->appendMany([
+                new FileExistsValidator(),
+                new ReadableFileValidator(),
+                new JsonFileValidator()
+            ])
             ->lock();
     }
 }
