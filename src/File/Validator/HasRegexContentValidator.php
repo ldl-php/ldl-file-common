@@ -3,18 +3,20 @@
 namespace LDL\File\Validator;
 
 use LDL\Framework\Helper\RegexHelper;
+use LDL\Validators\BeforeValidateInterface;
 use LDL\Validators\HasValidatorResultInterface;
 use LDL\Validators\NegatedValidatorInterface;
-use LDL\Validators\ResetValidatorInterface;
 use LDL\Validators\Traits\NegatedValidatorTrait;
+use LDL\Validators\Traits\ValidatorBeforeValidateTrait;
 use LDL\Validators\Traits\ValidatorValidateTrait;
 use LDL\Validators\ValidatorHasConfigInterface;
 use LDL\Validators\ValidatorInterface;
 
-class HasRegexContentValidator implements ValidatorInterface, NegatedValidatorInterface, HasValidatorResultInterface, ResetValidatorInterface, ValidatorHasConfigInterface
+class HasRegexContentValidator implements ValidatorInterface, NegatedValidatorInterface, HasValidatorResultInterface, BeforeValidateInterface, ValidatorHasConfigInterface
 {
     use ValidatorValidateTrait {validate as _validate;}
     use NegatedValidatorTrait;
+    use ValidatorBeforeValidateTrait;
 
     /**
      * @var string
@@ -60,11 +62,10 @@ class HasRegexContentValidator implements ValidatorInterface, NegatedValidatorIn
         $this->storeLine = $storeLine;
         $this->_tNegated = $negated;
         $this->description = $description;
-    }
 
-    public function reset()
-    {
-        $this->lines = null;
+        $this->onBeforeValidate()->append(function(){
+            $this->lines = null;
+        });
     }
 
     /**

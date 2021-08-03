@@ -16,9 +16,12 @@ final class ReadWriteFileCollection extends AbstractCollection
     {
         parent::__construct($items);
         $this->getAppendValueValidatorChain()
-            ->append(new FileExistsValidator())
-            ->append(new ReadableFileValidator())
-            ->append(new WritableFileValidator())
+            ->getChainItems()
+            ->appendMany([
+                new FileExistsValidator(),
+                new ReadableFileValidator(),
+                new WritableFileValidator()
+            ])
             ->lock();
     }
 }
