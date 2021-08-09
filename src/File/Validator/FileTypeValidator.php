@@ -8,20 +8,12 @@ use LDL\Validators\Traits\NegatedValidatorTrait;
 use LDL\Validators\Traits\ValidatorValidateTrait;
 use LDL\Validators\ValidatorHasConfigInterface;
 use LDL\Validators\ValidatorInterface;
+use LDL\File\Helper\FileTypeHelper;
 
 class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface, ValidatorHasConfigInterface
 {
     use ValidatorValidateTrait;
     use NegatedValidatorTrait;
-
-    public const FILE_TYPE_REGULAR='regular';
-    public const FILE_TYPE_DIRECTORY='directory';
-    public const FILE_TYPE_LINK='link';
-    public const FILE_TYPE_SOCKET='socket';
-    public const FILE_TYPE_FIFO='fifo';
-    public const FILE_TYPE_CHAR='char';
-    public const FILE_TYPE_BLOCK='block';
-    public const FILE_TYPE_UNKNOWN='unknown';
 
     /**
      * @var UniqueStringCollection
@@ -36,14 +28,14 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
     public function __construct(iterable $types, bool $negated=false, string $description=null)
     {
         $validTypes = new UniqueStringCollection([
-            self::FILE_TYPE_DIRECTORY,
-            self::FILE_TYPE_REGULAR,
-            self::FILE_TYPE_LINK,
-            self::FILE_TYPE_SOCKET,
-            self::FILE_TYPE_FIFO,
-            self::FILE_TYPE_CHAR,
-            self::FILE_TYPE_BLOCK,
-            self::FILE_TYPE_UNKNOWN
+            FileTypeHelper::FILE_TYPE_DIRECTORY,
+            FileTypeHelper::FILE_TYPE_REGULAR,
+            FileTypeHelper::FILE_TYPE_LINK,
+            FileTypeHelper::FILE_TYPE_SOCKET,
+            FileTypeHelper::FILE_TYPE_FIFO,
+            FileTypeHelper::FILE_TYPE_CHAR,
+            FileTypeHelper::FILE_TYPE_BLOCK,
+            FileTypeHelper::FILE_TYPE_UNKNOWN
         ]);
 
         $types = new UniqueStringCollection($types);
@@ -90,7 +82,7 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
         if(!$this->description){
             return sprintf(
                 'File type must be one of: %s',
-                implode(",", $this->types->toArray())
+                $this->types->implode(',')
             );
         }
 
@@ -99,9 +91,7 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertTrue($path): void
     {
-        $type = $this->initialValidation($path);
-
-        if($this->types->hasValue($type)){
+        if($this->types->hasValue(FileTypeHelper::getType($path))){
             return;
         }
 
@@ -110,9 +100,7 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        $type = $this->initialValidation($path);
-
-        if(!$this->types->hasValue($type)){
+        if(!$this->types->hasValue(FileTypeHelper::getType($path))){
             return;
         }
 
@@ -164,40 +152,4 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
         ];
     }
 
-    private function initialValidation($path): string
-    {
-        $perms = fileperms($path);
-
-        if(!$perms){
-            throw new \InvalidArgumentException('Invalid file provided');
-        }
-
-        switch ($perms & 0xF000) {
-            case 0xC000: // socket
-                $type = self::FILE_TYPE_SOCKET;
-                break;
-            case 0xA000: // symbolic link
-                $type = self::FILE_TYPE_LINK;
-                break;
-            case 0x8000: // regular
-                $type = self::FILE_TYPE_REGULAR;
-                break;
-            case 0x6000: // block special
-                $type = self::FILE_TYPE_BLOCK;
-                break;
-            case 0x4000: // directory
-                $type = self::FILE_TYPE_DIRECTORY;
-                break;
-            case 0x2000: // character special
-                $type = self::FILE_TYPE_CHAR;
-                break;
-            case 0x1000: // FIFO pipe
-                $type = self::FILE_TYPE_FIFO;
-                break;
-            default: // unknown
-                $type = self::FILE_TYPE_UNKNOWN;
-        }
-
-        return $type;
-    }
 }
