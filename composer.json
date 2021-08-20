@@ -5,10 +5,10 @@
     "keywords": [
         "FS",
         "Filesystem",
-	"files",
-	"type",
-	"handling",
-	"collection"
+        "files",
+        "type",
+        "handling",
+        "collection"
     ],
     "homepage": "https://github.com/pthreat/ldl-file-common",
     "license": "MIT",
@@ -23,7 +23,7 @@
     "require": {
         "php": ">=7.3",
         "ext-json": "*",
-	"ldl-framework/typed-collection":"dev-master",
+        "ldl-framework/typed-collection":"dev-master",
         "ext-fileinfo": "*"
     },
     "autoload": {
