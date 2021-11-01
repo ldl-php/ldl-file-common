@@ -1,0 +1,11 @@
+Create "LDL\File\Collection\JsonFileCollection" instance
+
+Check validators
+"(LDL\File\Validator\FileExistsValidator && LDL\File\Validator\ReadableFileValidator && LDL\File\Validator\JsonFileValidator)"
+""Validate that a file exist" && "Validate that a file is readable" && "Validate that a file is a json file""
+Append JSON file to the collection (no exception must be thrown) ...
+OK!
+Append regular file to the collection, exception must be thrown
+EXCEPTION: Could not decode file "/home/ldl/ldl-project/ldl-file-common/example/JsonFileCollectionExample.php" as JSON, Decode error: Syntax error
+
+Clean up generated files ...

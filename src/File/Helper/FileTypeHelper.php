@@ -4,18 +4,10 @@ namespace LDL\File\Helper;
 
 use LDL\File\Exception\ExistsException;
 use LDL\File\Exception\ReadException;
+use LDL\File\Helper\Constants\FileTypeConstants;
 
 final class FileTypeHelper
 {
-    public const FILE_TYPE_REGULAR='regular';
-    public const FILE_TYPE_DIRECTORY='directory';
-    public const FILE_TYPE_LINK='link';
-    public const FILE_TYPE_SOCKET='socket';
-    public const FILE_TYPE_FIFO='fifo';
-    public const FILE_TYPE_CHAR='char';
-    public const FILE_TYPE_BLOCK='block';
-    public const FILE_TYPE_UNKNOWN='unknown';
-
     /**
      * @param string $path
      * @throws ExistsException if file does not exists
@@ -36,28 +28,28 @@ final class FileTypeHelper
 
         switch ($perms & 0xF000) {
             case 0xC000: // socket
-                return self::FILE_TYPE_SOCKET;
+                return FileTypeConstants::FILE_TYPE_SOCKET;
                 break;
             case 0xA000: // symbolic link
-                return self::FILE_TYPE_LINK;
+                return FileTypeConstants::FILE_TYPE_LINK;
                 break;
             case 0x8000: // regular
-                return self::FILE_TYPE_REGULAR;
+                return FileTypeConstants::FILE_TYPE_REGULAR;
                 break;
             case 0x6000: // block special
-                return self::FILE_TYPE_BLOCK;
+                return FileTypeConstants::FILE_TYPE_BLOCK;
                 break;
             case 0x4000: // directory
-                return self::FILE_TYPE_DIRECTORY;
+                return FileTypeConstants::FILE_TYPE_DIRECTORY;
                 break;
             case 0x2000: // character special
-                return self::FILE_TYPE_CHAR;
+                return FileTypeConstants::FILE_TYPE_CHAR;
                 break;
             case 0x1000: // FIFO pipe
-                return self::FILE_TYPE_FIFO;
+                return FileTypeConstants::FILE_TYPE_FIFO;
                 break;
             default: // unknown
-                return self::FILE_TYPE_UNKNOWN;
+                return FileTypeConstants::FILE_TYPE_UNKNOWN;
                 break;
         }
 

@@ -2,7 +2,7 @@
 
 namespace LDL\File\Collection;
 
-use LDL\File\Helper\FileTypeHelper;
+use LDL\File\Helper\Constants\FileTypeConstants;
 use LDL\File\Validator\FileTypeValidator;
 use LDL\Type\Collection\AbstractCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
@@ -17,7 +17,7 @@ final class DirectoryCollection extends AbstractCollection
 
         $this->getAppendValueValidatorChain()
             ->getChainItems()
-            ->append(new FileTypeValidator([FileTypeHelper::FILE_TYPE_DIRECTORY]))
+            ->append(new FileTypeValidator([FileTypeConstants::FILE_TYPE_DIRECTORY]))
             ->lock();
     }
 }

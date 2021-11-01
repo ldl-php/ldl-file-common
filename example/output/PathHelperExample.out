@@ -1,0 +1,20 @@
+Resolve relative path: "/home/../etc/passwd", resolved path must be equal to: /etc/passwd
+OK
+Resolve relative path: "../../home/test", resolved path must be equal to: /home/test
+OK
+Resolve relative path: "/tmp/..//tmp", resolved path must be equal to: /tmp
+Given path MUST exist
+OK
+
+Test exception with a non existent path
+#############################################################
+
+Resolve relative path: "/non/../existent/path", resolved path must be equal to: /non/existent/path
+Given path MUST exist
+Given path: "/non/../existent/path" does not exist
+
+Test createAbsolutePath
+#########################################
+
+Result is: /home/ldl/ldl-project
+OK

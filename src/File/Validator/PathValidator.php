@@ -56,7 +56,7 @@ class PathValidator implements ValidatorInterface, NegatedValidatorInterface, Va
             return;
         }
 
-        throw new \LogicException("Path: \"$value\" does not match criteria");
+        throw new \LogicException("Path: \"$value\" doesn't matches criteria \"{$this->path}\"");
     }
 
     public function assertFalse($value): void
@@ -65,7 +65,7 @@ class PathValidator implements ValidatorInterface, NegatedValidatorInterface, Va
             return;
         }
 
-        throw new \LogicException("Path: \"$value\" does match criteria");
+        throw new \LogicException("Path: \"$value\" matches criteria \"{$this->path}\"");
     }
 
     public function jsonSerialize(): array
