@@ -1,0 +1,39 @@
+Create "LDL\File\Collection\ReadableFileCollection" instance
+
+Check validators
+"(LDL\File\Validator\FileExistsValidator && LDL\File\Validator\ReadableFileValidator)"
+""Validate that a file exist" && "Validate that a file is readable""
+Creating file "/tmp/ldl_fs_example/0.txt" with permissions "0"
+Exception must be thrown
+EXCEPTION: File "/tmp/ldl_fs_example/0.txt" is not readable!
+
+Creating file "/tmp/ldl_fs_example/1.txt" with permissions "0"
+Exception must be thrown
+EXCEPTION: File "/tmp/ldl_fs_example/1.txt" is not readable!
+
+Creating file "/tmp/ldl_fs_example/2.txt" with permissions "0"
+Exception must be thrown
+EXCEPTION: File "/tmp/ldl_fs_example/2.txt" is not readable!
+
+Creating file "/tmp/ldl_fs_example/3.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/4.txt" with permissions "0"
+Exception must be thrown
+EXCEPTION: File "/tmp/ldl_fs_example/4.txt" is not readable!
+
+Creating file "/tmp/ldl_fs_example/5.txt" with permissions "0"
+Exception must be thrown
+EXCEPTION: File "/tmp/ldl_fs_example/5.txt" is not readable!
+
+Creating file "/tmp/ldl_fs_example/6.txt" with permissions "0"
+Exception must be thrown
+EXCEPTION: File "/tmp/ldl_fs_example/6.txt" is not readable!
+
+Creating file "/tmp/ldl_fs_example/7.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/8.txt" with permissions "0"
+Exception must be thrown
+EXCEPTION: File "/tmp/ldl_fs_example/8.txt" is not readable!
+
+Creating file "/tmp/ldl_fs_example/9.txt" with permissions "292"
+
+Clean up generated files ...
+Done

@@ -22,4 +22,5 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - fix/1200624131677611 - Fix validators - Remove dumpable and BasicValidatorConfig. Also add a description
 - fix/1200410494797363 - Fix HasRegexContentValidator
 - fix/1200366404543319 - Fix validators and configs to comply with ldl-validators
+- fix/1201302588223605 - Move FileTypeHelper constants to FileTypeConstants
 

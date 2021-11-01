@@ -5,10 +5,10 @@ namespace LDL\File\Collection;
 use LDL\File\Validator\FileExistsValidator;
 use LDL\File\Validator\ReadableFileValidator;
 use LDL\File\Validator\WritableFileValidator;
-use LDL\Type\Collection\AbstractCollection;
+use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
 
-final class ReadWriteFileCollection extends AbstractCollection
+final class ReadWriteFileCollection extends AbstractTypedCollection
 {
     use AppendValueValidatorChainTrait;
 

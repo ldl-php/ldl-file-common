@@ -1,0 +1,40 @@
+Create PathValidator with path: '/home/user/ldl-file-common/example'
+Validate some paths
+Validate: '/home/user/ldl-file-common'
+EXCEPTION: Path: "/home/user/ldl-file-common" doesn't matches criteria "/home/user/ldl-file-common/example"
+Validate: '/home/user/ldl-file-common/example'
+OK!
+Validate: '/home/user/ldl-file-common/example/PathValidatorExample.php'
+OK!
+Validate: '/home/user/ldl-file-common/src/File/Collection'
+EXCEPTION: Path: "/home/user/ldl-file-common/src/File/Collection" doesn't matches criteria "/home/user/ldl-file-common/example"
+Validate: '/home/user/ldl-file-common/src/file/Validator'
+EXCEPTION: Path: "/home/user/ldl-file-common/src/file/Validator" doesn't matches criteria "/home/user/ldl-file-common/example"
+
+
+Create PathValidator with path: '/home/user/ldl-file-common/src/file'
+Validate some paths
+Validate: '/home/user/ldl-file-common'
+EXCEPTION: Path: "/home/user/ldl-file-common" doesn't matches criteria "/home/user/ldl-file-common/src/file"
+Validate: '/home/user/ldl-file-common/example'
+EXCEPTION: Path: "/home/user/ldl-file-common/example" doesn't matches criteria "/home/user/ldl-file-common/src/file"
+Validate: '/home/user/ldl-file-common/example/PathValidatorExample.php'
+EXCEPTION: Path: "/home/user/ldl-file-common/example/PathValidatorExample.php" doesn't matches criteria "/home/user/ldl-file-common/src/file"
+Validate: '/home/user/ldl-file-common/src/File/Collection'
+EXCEPTION: Path: "/home/user/ldl-file-common/src/File/Collection" doesn't matches criteria "/home/user/ldl-file-common/src/file"
+Validate: '/home/user/ldl-file-common/src/file/Validator'
+OK!
+
+
+Create NEGATED PathValidator with path: '/home/user/ldl-file-common/src/file'
+Validate some paths
+Validate: '/home/user/ldl-file-common'
+OK!
+Validate: '/home/user/ldl-file-common/example'
+OK!
+Validate: '/home/user/ldl-file-common/example/PathValidatorExample.php'
+OK!
+Validate: '/home/user/ldl-file-common/src/File/Collection'
+OK!
+Validate: '/home/user/ldl-file-common/src/file/Validator'
+EXCEPTION: Path: "/home/user/ldl-file-common/src/file/Validator" matches criteria "/home/user/ldl-file-common/src/file"

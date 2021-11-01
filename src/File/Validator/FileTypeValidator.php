@@ -2,6 +2,7 @@
 
 namespace LDL\File\Validator;
 
+use LDL\File\Constants\FileTypeConstants;
 use LDL\Type\Collection\Types\String\UniqueStringCollection;
 use LDL\Validators\NegatedValidatorInterface;
 use LDL\Validators\Traits\NegatedValidatorTrait;
@@ -28,14 +29,14 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
     public function __construct(iterable $types, bool $negated=false, string $description=null)
     {
         $validTypes = new UniqueStringCollection([
-            FileTypeHelper::FILE_TYPE_DIRECTORY,
-            FileTypeHelper::FILE_TYPE_REGULAR,
-            FileTypeHelper::FILE_TYPE_LINK,
-            FileTypeHelper::FILE_TYPE_SOCKET,
-            FileTypeHelper::FILE_TYPE_FIFO,
-            FileTypeHelper::FILE_TYPE_CHAR,
-            FileTypeHelper::FILE_TYPE_BLOCK,
-            FileTypeHelper::FILE_TYPE_UNKNOWN
+            FileTypeConstants::FILE_TYPE_DIRECTORY,
+            FileTypeConstants::FILE_TYPE_REGULAR,
+            FileTypeConstants::FILE_TYPE_LINK,
+            FileTypeConstants::FILE_TYPE_SOCKET,
+            FileTypeConstants::FILE_TYPE_FIFO,
+            FileTypeConstants::FILE_TYPE_CHAR,
+            FileTypeConstants::FILE_TYPE_BLOCK,
+            FileTypeConstants::FILE_TYPE_UNKNOWN
         ]);
 
         $types = new UniqueStringCollection($types);
