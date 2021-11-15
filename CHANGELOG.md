@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - feature/1200637529087859 - Use ComparisonOperatorHelper on FileSizeValidator
 - feature/1200748544420027 - Add FileTypeHelper & standard exceptions
 - feature/1200826040420667 - Add PathValidator / Add PathHelper / Use FileTypeHelper on DirectoryCollection
+- feature/1201368093770914 - Add PathHelper
 
 ### Changed
 
