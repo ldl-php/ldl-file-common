@@ -59,7 +59,7 @@ class FileNameValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertTrue($path): void
     {
-        $file = new \SplFileInfo($path);
+        $file = new \SplFileInfo((string) $path);
 
         if($file->getFilename() === $this->filename){
             return;
@@ -70,7 +70,7 @@ class FileNameValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        $file = new \SplFileInfo($path);
+        $file = new \SplFileInfo((string) $path);
 
         if($file->getFilename() !== $this->filename){
             return;

@@ -60,7 +60,7 @@ class MimeTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertTrue($path): void
     {
-        $mimeType = mime_content_type($path);
+        $mimeType = mime_content_type((string) $path);
 
         if($this->types->hasValue($mimeType)){
             return;
@@ -77,7 +77,7 @@ class MimeTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        $mimeType = mime_content_type($path);
+        $mimeType = mime_content_type((string) $path);
 
         if(!$this->types->hasValue($mimeType)){
             return;

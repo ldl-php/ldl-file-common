@@ -59,7 +59,7 @@ class FileExtensionValidator implements ValidatorInterface, NegatedValidatorInte
 
     public function assertTrue($path): void
     {
-        $file = new \SplFileInfo($path);
+        $file = new \SplFileInfo((string) $path);
 
         if($file->getExtension() === $this->extension){
             return;
@@ -70,7 +70,7 @@ class FileExtensionValidator implements ValidatorInterface, NegatedValidatorInte
 
     public function assertFalse($path): void
     {
-        $file = new \SplFileInfo($path);
+        $file = new \SplFileInfo((string) $path);
 
         if($file->getExtension() !== $this->extension){
             return;

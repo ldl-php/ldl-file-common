@@ -28,12 +28,12 @@ class WritableFileValidator implements ValidatorInterface, NegatedValidatorInter
      */
     public function validate($path): void
     {
-        if(!file_exists($path)){
+        if(!file_exists((string)$path)){
             $msg = "File \"$path\" does not exists";
             throw new Exception\FileNotFoundException($msg);
         }
 
-        $this->_validate($path);
+        $this->_validate((string) $path);
     }
 
     public function assertTrue($path): void

@@ -10,7 +10,7 @@ use LDL\Validators\ValidatorInterface;
 
 class ReadableFileValidator implements ValidatorInterface, NegatedValidatorInterface
 {
-    use ValidatorValidateTrait;
+    use ValidatorValidateTrait {validate as _validate;}
     use NegatedValidatorTrait;
     use ValidatorDescriptionTrait;
 
@@ -22,9 +22,23 @@ class ReadableFileValidator implements ValidatorInterface, NegatedValidatorInter
         $this->_tDescription = $description ?? self::DESCRIPTION;
     }
 
+    /**
+     * @param mixed $path
+     * @throws Exception\FileNotFoundException
+     */
+    public function validate($path): void
+    {
+        if(!file_exists((string)$path)){
+            $msg = "File \"$path\" does not exists";
+            throw new Exception\FileNotFoundException($msg);
+        }
+
+        $this->_validate((string) $path);
+    }
+
     public function assertTrue($path): void
     {
-        if(is_readable($path)){
+        if(is_readable((string)$path)){
             return;
         }
 
@@ -34,7 +48,7 @@ class ReadableFileValidator implements ValidatorInterface, NegatedValidatorInter
 
     public function assertFalse($path): void
     {
-        if(!is_readable($path)){
+        if(!is_readable((string)$path)){
             return;
         }
 
