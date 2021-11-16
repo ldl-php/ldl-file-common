@@ -2,27 +2,27 @@
 
 namespace LDL\File\Collection;
 
-use LDL\File\Validator\FileExistsValidator;
+use LDL\File\File;
 use LDL\File\Validator\JsonFileValidator;
 use LDL\File\Validator\ReadableFileValidator;
-use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
+use LDL\Validators\ClassComplianceValidator;
 
-final class JsonFileCollection extends AbstractTypedCollection
+final class JsonFileCollection extends AbstractFileCollection
 {
     use AppendValueValidatorChainTrait;
 
     public function __construct(iterable $items = null)
     {
-        parent::__construct($items);
-
         $this->getAppendValueValidatorChain()
             ->getChainItems()
             ->appendMany([
-                new FileExistsValidator(),
+                new ClassComplianceValidator(File::class, true),
                 new ReadableFileValidator(),
                 new JsonFileValidator()
             ])
             ->lock();
+
+        parent::__construct($items);
     }
 }

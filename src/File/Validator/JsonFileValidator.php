@@ -24,7 +24,7 @@ class JsonFileValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertTrue($path): void
     {
-        $content = file_get_contents($path);
+        $content = file_get_contents((string)$path);
 
         try {
 
@@ -44,14 +44,14 @@ class JsonFileValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        $content = file_get_contents($path);
+        $content = file_get_contents((string)$path);
 
         try {
 
             json_decode($content, false, 2048, \JSON_THROW_ON_ERROR);
 
             $msg = sprintf(
-                'Could decode file "%s" as JSON',
+                'File "%s" is as JSON file',
                 $path
             );
 

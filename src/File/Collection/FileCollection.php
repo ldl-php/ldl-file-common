@@ -2,32 +2,34 @@
 
 namespace LDL\File\Collection;
 
-use LDL\File\Constants\FileTypeConstants;
 use LDL\File\Directory;
-use LDL\File\Validator\FileTypeValidator;
+use LDL\File\File;
 use LDL\Framework\Base\Collection\Contracts\CollectionInterface;
-use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
+use LDL\Validators\Chain\OrValidatorChain;
 use LDL\Validators\ClassComplianceValidator;
 
-final class DirectoryCollection extends AbstractTypedCollection
+final class FileCollection extends AbstractFileCollection
 {
     use AppendValueValidatorChainTrait;
 
     public function __construct(iterable $items = null)
     {
-        parent::__construct($items);
-
-        $this->getAppendValueValidatorChain()
+        $this->getAppendValueValidatorChain(OrValidatorChain::class)
             ->getChainItems()
-            ->append(new ClassComplianceValidator(Directory::class,true))
+            ->appendMany([
+                new ClassComplianceValidator(File::class,true),
+                new ClassComplianceValidator(Directory::class,true)
+            ])
             ->lock();
+
+        parent::__construct($items);
     }
 
     public function append($item, $key = null): CollectionInterface
     {
         if(is_string($item)){
-            $item = new Directory($item);
+            $item = new File($item);
         }
 
         return parent::append($item, $key);

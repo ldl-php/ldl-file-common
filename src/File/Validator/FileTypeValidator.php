@@ -9,7 +9,7 @@ use LDL\Validators\Traits\NegatedValidatorTrait;
 use LDL\Validators\Traits\ValidatorValidateTrait;
 use LDL\Validators\ValidatorHasConfigInterface;
 use LDL\Validators\ValidatorInterface;
-use LDL\File\Helper\FileTypeHelper;
+use LDL\File\Helper\FileHelper;
 
 class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface, ValidatorHasConfigInterface
 {
@@ -92,7 +92,7 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertTrue($path): void
     {
-        if($this->types->hasValue(FileTypeHelper::getType($path))){
+        if($this->types->hasValue(FileHelper::getType($path))){
             return;
         }
 
@@ -101,7 +101,7 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        if(!$this->types->hasValue(FileTypeHelper::getType($path))){
+        if(!$this->types->hasValue(FileHelper::getType($path))){
             return;
         }
 

@@ -48,6 +48,8 @@ class HasRegexContentValidator implements ValidatorInterface, NegatedValidatorIn
      * @param bool $storeLine
      * @param bool $negated
      * @param string|null $description
+     * @throws \LDL\Framework\Base\Exception\LockingException
+     * @throws \LDL\Framework\Helper\ArrayHelper\Exception\InvalidKeyException
      */
     public function __construct(
         string $regex,
@@ -105,7 +107,7 @@ class HasRegexContentValidator implements ValidatorInterface, NegatedValidatorIn
      */
     public function validate($path): void
     {
-        if(!is_readable($path)){
+        if(!is_readable((string) $path)){
             $msg = "Could not open file \"$path\" in rb mode!\n";
             throw new \RuntimeException($msg);
         }

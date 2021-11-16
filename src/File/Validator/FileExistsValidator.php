@@ -27,7 +27,7 @@ class FileExistsValidator implements ValidatorInterface, NegatedValidatorInterfa
 
     public function assertTrue($path): void
     {
-        if(file_exists($path)){
+        if(file_exists((string)$path)){
             return;
         }
 
