@@ -117,7 +117,7 @@ class HasRegexContentValidator implements ValidatorInterface, NegatedValidatorIn
 
     public function assertTrue($path): void
     {
-        $fp = @fopen($path, 'rb');
+        $fp = @fopen((string) $path, 'rb');
         $lineNo = 0;
         $hasMatches = false;
 
@@ -141,7 +141,7 @@ class HasRegexContentValidator implements ValidatorInterface, NegatedValidatorIn
 
     public function assertFalse($path): void
     {
-        $fp = @fopen($path, 'rb');
+        $fp = @fopen((string) $path, 'rb');
         $lineNo = 0;
         $hasMatches = false;
 

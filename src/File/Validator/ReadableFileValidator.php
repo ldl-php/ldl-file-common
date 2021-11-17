@@ -28,17 +28,17 @@ class ReadableFileValidator implements ValidatorInterface, NegatedValidatorInter
      */
     public function validate($path): void
     {
-        if(!file_exists((string)$path)){
+        if(!file_exists((string) $path)){
             $msg = "File \"$path\" does not exists";
             throw new Exception\FileNotFoundException($msg);
         }
 
-        $this->_validate((string) $path);
+        $this->_validate($path);
     }
 
     public function assertTrue($path): void
     {
-        if(is_readable((string)$path)){
+        if(is_readable((string) $path)){
             return;
         }
 
@@ -48,7 +48,7 @@ class ReadableFileValidator implements ValidatorInterface, NegatedValidatorInter
 
     public function assertFalse($path): void
     {
-        if(!is_readable((string)$path)){
+        if(!is_readable((string) $path)){
             return;
         }
 

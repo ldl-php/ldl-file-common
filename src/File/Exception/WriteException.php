@@ -2,9 +2,15 @@
 
 namespace LDL\File\Exception;
 
-use LDL\Framework\Base\Exception\LDLException;
+/**
+ * Class WriteException
+ * @package LDL\File\Exception
+ *
+ * This exception must be thrown when a file or directory are required to be writable, do not mistake this exception
+ * with the ExistsException as this one refers to file permissions, not to file existence.
+ */
 
-class WriteException extends LDLException
+class WriteException extends FileException
 {
 
 }

@@ -1,0 +1,48 @@
+!!!DYNAMIC
+Create some random files and directories in the system's temp dir and append them to a Directory collectionGet directory tree and print it out
+
+####################################################
+
+Directory: /tmp/ldl-file-common-test/1
+
+Directory: /tmp/ldl-file-common-test/10
+
+File: /tmp/ldl-file-common-test/11.txt
+
+Directory: /tmp/ldl-file-common-test/12
+
+Directory: /tmp/ldl-file-common-test/13
+
+Directory: /tmp/ldl-file-common-test/14
+
+Directory: /tmp/ldl-file-common-test/15
+
+Directory: /tmp/ldl-file-common-test/16
+
+Directory: /tmp/ldl-file-common-test/17
+
+File: /tmp/ldl-file-common-test/18.txt
+
+Directory: /tmp/ldl-file-common-test/19
+
+File: /tmp/ldl-file-common-test/2.txt
+
+File: /tmp/ldl-file-common-test/20.txt
+
+File: /tmp/ldl-file-common-test/3.txt
+
+Directory: /tmp/ldl-file-common-test/4
+
+File: /tmp/ldl-file-common-test/5.txt
+
+File: /tmp/ldl-file-common-test/6.txt
+
+Directory: /tmp/ldl-file-common-test/7
+
+Directory: /tmp/ldl-file-common-test/8
+
+File: /tmp/ldl-file-common-test/9.txt
+
+Delete created directory recursively
+
+####################################################
