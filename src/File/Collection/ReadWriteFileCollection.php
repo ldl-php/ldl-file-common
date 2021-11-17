@@ -2,16 +2,20 @@
 
 namespace LDL\File\Collection;
 
+use LDL\File\Collection\Contracts\FileCollectionInterface;
 use LDL\File\File;
 use LDL\File\Validator\FileExistsValidator;
 use LDL\File\Validator\ReadableFileValidator;
 use LDL\File\Validator\WritableFileValidator;
+use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
+use LDL\File\Collection\Traits\AppendFileAsStringTrait;
 use LDL\Validators\ClassComplianceValidator;
 
-final class ReadWriteFileCollection extends AbstractFileCollection
+final class ReadWriteFileCollection extends AbstractTypedCollection implements FileCollectionInterface
 {
     use AppendValueValidatorChainTrait;
+    use AppendFileAsStringTrait;
 
     public function __construct(iterable $items = null)
     {
@@ -27,4 +31,5 @@ final class ReadWriteFileCollection extends AbstractFileCollection
 
         parent::__construct($items);
     }
+
 }

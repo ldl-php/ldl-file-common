@@ -2,6 +2,10 @@
 
 namespace LDL\File;
 
+use LDL\File\Exception\ExistsException;
+use LDL\File\Exception\FileTypeException;
+use LDL\File\Exception\ReadException;
+use LDL\File\Exception\WriteException;
 use LDL\File\Helper\DirectoryHelper;
 use LDL\File\Helper\PathHelper;
 use LDL\File\Helper\PermissionsHelper;
@@ -19,6 +23,11 @@ final class Directory implements ToStringInterface
      */
     private $isDeleted=false;
 
+    /**
+     * Directory constructor.
+     * @param string $path
+     * @throws FileTypeException
+     */
     public function __construct(string $path)
     {
         if(is_dir($path)){
@@ -26,7 +35,7 @@ final class Directory implements ToStringInterface
             return;
         }
 
-        throw new \InvalidArgumentException(
+        throw new FileTypeException(
             sprintf(
                 'File %s does not exists or is a directory, if you wish to create it, use %s::create',
                 $path,
@@ -36,15 +45,32 @@ final class Directory implements ToStringInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isReadable() : bool
+    {
+        return is_readable($this->path);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWritable() : bool
+    {
+        return is_writable($this->path);
+    }
+
+    /**
      * @param string $path
      * @param int $permissions
      * @return Directory
-     * @throws \Exception
+     * @throws ExistsException
+     * @throws WriteException
+     * @throws FileTypeException
      */
     public static function create(string $path, int $permissions=0755) : Directory
     {
-        DirectoryHelper::create($path, $permissions);
-        return new self($path);
+        return DirectoryHelper::create($path, $permissions);
     }
 
     /**
@@ -53,51 +79,59 @@ final class Directory implements ToStringInterface
      * @param string $path
      * @param int $permissions
      * @return Directory
-     * @throws \Exception
+     * @throws ExistsException
+     * @throws WriteException
+     * @throws FileTypeException
      */
     public function mkdir(string $path, int $permissions=0755) : Directory
     {
+        if(!$this->isWritable()){
+            throw new WriteException("Directory {$this->path} is not writable!");
+        }
+
         $path = PathHelper::createAbsolutePath($this->path, $path);
-        DirectoryHelper::create($path, $permissions);
-        return new self($path);
+        return DirectoryHelper::create($path, $permissions);
     }
 
     /**
      * Returns a Tree (containing File objects and Directory objects)
+     *
      * @return Tree
+     * @throws ReadException
+     * @throws FileTypeException
+     * @throws ExistsException
      */
     public function getTree() : Tree
     {
         $this->checkIfDeleted(__METHOD__);
-        $tree = new Tree();
-        foreach(scandir($this->path) as $file){
-            $file = PathHelper::createAbsolutePath($this->path, $file);
-            $tree->append(is_dir($file) ? new self($file) : new File($file));
-        }
-
-        return $tree;
+        return DirectoryHelper::getTree($this->path);
     }
 
     /**
-     * @return Tree
+     * @return iterable
+     * @throws ReadException
+     * @throws FileTypeException
+     * @throws ExistsException
      */
     public function iterateTree() : iterable
     {
         $this->checkIfDeleted(__METHOD__);
-
-        foreach(scandir($this->path) as $file){
-            yield is_dir($file) ? new self($file) : new File($file);
-        }
+        yield from DirectoryHelper::iterateTree($this->toString());
     }
 
     /**
      * Deletes a directory recursively
      *
      * @return Directory
+     * @throws ExistsException
+     * @throws FileTypeException
+     * @throws ReadException
+     * @throws WriteException
      */
     public function delete() : Directory
     {
         $this->checkIfDeleted(__METHOD__);
+
         DirectoryHelper::delete($this->path);
         $this->isDeleted = true;
         return $this;
@@ -106,10 +140,17 @@ final class Directory implements ToStringInterface
     /**
      * @param int $permissions
      * @return Directory
+     * @throws WriteException
+     * @throws ExistsException
      */
     public function chmod(int $permissions) : Directory
     {
         $this->checkIfDeleted(__METHOD__);
+
+        if(!$this->isWritable()){
+            throw new WriteException("Directory {$this->path} is not writable!");
+        }
+
         PermissionsHelper::chmod($this->path, $permissions);
         return $this;
     }
@@ -117,10 +158,20 @@ final class Directory implements ToStringInterface
     /**
      * @param string $dest
      * @return Directory
+     * @throws ExistsException
      */
     public function copy(string $dest) : Directory
     {
-        throw new \LogicException("@TODO! Copy recursively to $dest directory");
+        $this->checkIfDeleted(__METHOD__);
+        return DirectoryHelper::copy($this->toString(), $dest);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted() : bool
+    {
+        return $this->isDeleted;
     }
 
     //<editor-fold desc="ToStringInterface Methods">
@@ -136,10 +187,9 @@ final class Directory implements ToStringInterface
     //</editor-fold>
 
     //<editor-fold desc="Private methods">
-
     /**
      * @param string $operation
-     * @throws \RuntimeException
+     * @throws ExistsException
      */
     private function checkIfDeleted(string $operation) : void
     {
@@ -149,7 +199,7 @@ final class Directory implements ToStringInterface
 
         $msg = sprintf('Can not %s directory "%s", it has been deleted', $operation, $this->path);
 
-        throw new \RuntimeException($msg);
+        throw new ExistsException($msg);
     }
     //</editor-fold>
 

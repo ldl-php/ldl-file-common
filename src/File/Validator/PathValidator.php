@@ -52,7 +52,7 @@ class PathValidator implements ValidatorInterface, NegatedValidatorInterface, Va
 
     public function assertTrue($value): void
     {
-        if(mb_strpos((string)$value, $this->path) !== false){
+        if(mb_strpos((string) $value, $this->path) !== false){
             return;
         }
 
@@ -61,7 +61,7 @@ class PathValidator implements ValidatorInterface, NegatedValidatorInterface, Va
 
     public function assertFalse($value): void
     {
-        if(mb_strpos((string)$value, $this->path) === false){
+        if(mb_strpos((string) $value, $this->path) === false){
             return;
         }
 

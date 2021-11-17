@@ -3,8 +3,10 @@
 namespace LDL\File\Helper;
 
 use LDL\File\Exception\ExistsException;
+use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\ReadException;
 use LDL\File\Constants\FileTypeConstants;
+use LDL\File\Exception\WriteException;
 use LDL\Type\Collection\Types\String\StringCollection;
 
 final class FileHelper
@@ -61,15 +63,17 @@ final class FileHelper
      *
      * @param string $file
      * @return StringCollection
+     * @throws FileTypeException
+     * @throws ReadException
      */
     public static function getLines(string $file) : StringCollection
     {
         if(!is_readable($file)){
-            throw new \RuntimeException("File $file is not readable!");
+            throw new ReadException("File $file is not readable!");
         }
 
         if(is_dir($file)){
-            throw new \RuntimeException("$file is a directory");
+            throw new FileTypeException("$file is a directory");
         }
 
         return new StringCollection(file($file));
@@ -81,15 +85,17 @@ final class FileHelper
      *
      * @param string $file
      * @return iterable
+     * @throws FileTypeException
+     * @throws ReadException
      */
     public static function iterateLines(string $file) : iterable
     {
         if(!is_readable($file)){
-            throw new \RuntimeException("File $file is not readable!");
+            throw new ReadException("File $file is not readable!");
         }
 
         if(is_dir($file)){
-            throw new \RuntimeException("$file is a directory");
+            throw new FileTypeException("$file is a directory");
         }
 
         $fp = fopen($file, 'rb');
@@ -109,20 +115,25 @@ final class FileHelper
      * @param string $dest
      * @param bool $overwrite
      *
-     * @throws \RuntimeException
+     * @throws WriteException
+     * @throws ReadException
      */
     public static function copy(string $source, string $dest, bool $overwrite=false) : void
     {
+        if(!is_readable($source)){
+            throw new ReadException("Source file \"$source\" is not readable");
+        }
+
         if(false === $overwrite && file_exists($dest)){
             $msg = sprintf(
                 'Destination file %s already exists, if you really want to overwrite it, set the overwrite flag to true',
                 $dest
             );
-            throw new \RuntimeException($msg);
+            throw new WriteException($msg);
         }
 
         if(!copy($source, $dest)){
-            throw new \RuntimeException('Could not copy file from "%s" to "%s"', $source, $dest);
+            throw new WriteException('Could not copy file from "%s" to "%s"', $source, $dest);
         }
     }
 

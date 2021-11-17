@@ -24,7 +24,7 @@ class JsonFileValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertTrue($path): void
     {
-        $content = file_get_contents((string)$path);
+        $content = file_get_contents((string) $path);
 
         try {
 
@@ -44,7 +44,7 @@ class JsonFileValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        $content = file_get_contents((string)$path);
+        $content = file_get_contents((string) $path);
 
         try {
 

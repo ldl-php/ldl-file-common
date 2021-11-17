@@ -98,7 +98,7 @@ class FileSizeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        $size = filesize($path);
+        $size = filesize((string) $path);
 
         if(ComparisonOperatorHelper::compareInverse($size, $this->bytes, $this->operator)){
             return;

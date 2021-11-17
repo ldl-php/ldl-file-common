@@ -92,7 +92,7 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertTrue($path): void
     {
-        if($this->types->hasValue(FileHelper::getType($path))){
+        if($this->types->hasValue(FileHelper::getType((string) $path))){
             return;
         }
 
@@ -101,7 +101,7 @@ class FileTypeValidator implements ValidatorInterface, NegatedValidatorInterface
 
     public function assertFalse($path): void
     {
-        if(!$this->types->hasValue(FileHelper::getType($path))){
+        if(!$this->types->hasValue(FileHelper::getType((string) $path))){
             return;
         }
 
