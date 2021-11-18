@@ -1,75 +1,55 @@
 <?php declare(strict_types=1);
 
+/**
+ * In this example:
+ *
+ * 1) Generate random files and directories
+ * 2) Obtain tree from temporary directory where files were generated
+ * 3) Set random permissions (Readable and NON-Readable perms) on each file / directory
+ * 4) Create a new ReadableFileCollection by filtering files in tree and then filtering for readable only files
+ * 5) Print each readable file
+ * 6) Fix all permissions in the tree so all files can be deleted correctly
+ * 7) Delete testing directory
+ */
+
 use LDL\File\Collection\ReadableFileCollection;
-use LDL\File\Validator\Exception\ReadableFileValidatorException;
-use LDL\Validators\Chain\Dumper\ValidatorChainExprDumper;
-use LDL\Validators\Chain\Dumper\ValidatorChainHumanDumper;
 
 require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/lib/example-helper.php';
 
-$tmpDir = sprintf('%s%s%s',sys_get_temp_dir(), \DIRECTORY_SEPARATOR, 'ldl_fs_example');
+$tmpDir = createTestFiles();
 
-if(is_dir($tmpDir)){
-    $files = glob("$tmpDir/*");
+$tree = $tmpDir->getTree();
 
-    foreach($files as $file){
-        if(is_file($file)) unlink($file);
-    }
+/**
+ * Assign readable and non readable permissions
+ */
+foreach($tree as $i => $file){
+    $permission = ($i % 2) ? 0444 : 0000;
+    $file->chmod($permission);
 
-    rmdir($tmpDir);
+    echo sprintf('Set file %s as %s', $file, 0444 === $permission ? "readable\n" : "not readable\n");
 }
 
-if (!mkdir($tmpDir, 0755) && !is_dir($tmpDir)) {
-    throw new \RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
+$rfc = new ReadableFileCollection($tree->filterReadable()->filterFiles());
+
+echo "\nPrint files which are readable: \n\n";
+
+foreach($rfc as $readable){
+    echo "$readable\n";
 }
 
-echo sprintf(
-    'Create "%s" instance%s',
-    ReadableFileCollection::class,
-    "\n\n"
-);
+echo "\nAttempt to append entire file tree (which contains readable and non-readable files) EXCEPTION must be thrown\n\n";
 
-$rfc = new ReadableFileCollection();
-
-echo "Check validators\n";
-dump(ValidatorChainExprDumper::dump($rfc->getAppendValueValidatorChain()));
-dump(ValidatorChainHumanDumper::dump($rfc->getAppendValueValidatorChain()));
-
-$permissions = [
-    0444, //Readable
-    0000 //No permission
-];
-
-for($i = 0; $i < 10; $i++){
-    shuffle($permissions);
-    $permission = $permissions[0];
-    $file = sprintf('%s%s%s.txt', $tmpDir, \DIRECTORY_SEPARATOR, $i);
-
-    echo sprintf('Creating file "%s" with permissions "%s"%s', $file, $permission, "\n");
-
-    file_put_contents($file, 'test');
-    chmod($file, $permission);
-
-    try {
-
-        if(000 === $permission){
-            echo "Exception must be thrown\n";
-        }
-
-        $rfc->append($file);
-
-    }catch(ReadableFileValidatorException $e){
-        echo "EXCEPTION: {$e->getMessage()}\n";
-    }
+try{
+    $rfc->appendMany($tree->filterFiles());
+}catch(\Exception $e){
+    echo "OK EXCEPTION: {$e->getMessage()}";
 }
 
-echo "\nClean up generated files ...\n";
-$files = glob("$tmpDir/*");
+/**
+ * Fix all permissions so everything can be deleted
+ */
+$tree->chmod(0755);
 
-foreach($files as $file){
-    if(is_file($file)) unlink($file);
-}
-
-rmdir($tmpDir);
-
-echo "Done\n";
+deleteTestDir();

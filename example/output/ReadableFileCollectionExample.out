@@ -1,78 +1,29 @@
-!!!DYNAMIC
-Create "LDL\File\Collection\ReadableFileCollection" instance
+Create some random files in /tmp/ldl-file-common and append them to a Directory collection
 
+Set file /tmp/ldl-file-common/.hidden_11 as not readable
+Set file /tmp/ldl-file-common/.hidden_12 as readable
+Set file /tmp/ldl-file-common/.hidden_13 as not readable
+Set file /tmp/ldl-file-common/.hidden_14 as readable
+Set file /tmp/ldl-file-common/.hidden_15 as not readable
+Set file /tmp/ldl-file-common/1.txt as readable
+Set file /tmp/ldl-file-common/10 as not readable
+Set file /tmp/ldl-file-common/2 as readable
+Set file /tmp/ldl-file-common/3.txt as not readable
+Set file /tmp/ldl-file-common/4 as readable
+Set file /tmp/ldl-file-common/5.txt as not readable
+Set file /tmp/ldl-file-common/6 as readable
+Set file /tmp/ldl-file-common/7.txt as not readable
+Set file /tmp/ldl-file-common/8 as readable
+Set file /tmp/ldl-file-common/9.txt as not readable
 
+Print files which are readable:
 
-Check validators
+/tmp/ldl-file-common/.hidden_12
+/tmp/ldl-file-common/.hidden_14
+/tmp/ldl-file-common/1.txt
 
-"(LDL\File\Validator\FileExistsValidator && LDL\File\Validator\ReadableFileValidator)"
+Attempt to append entire file tree (which contains readable and non-readable files) EXCEPTION must be thrown
 
-""Validate that a file exist" && "Validate that a file is readable""
+OK EXCEPTION: File "/tmp/ldl-file-common/.hidden_11" is not readable!
 
-Creating file "/tmp/ldl_fs_example/0.txt" with permissions "0"
-
-Exception must be thrown
-
-EXCEPTION: File "/tmp/ldl_fs_example/0.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/1.txt" with permissions "0"
-
-Exception must be thrown
-
-EXCEPTION: File "/tmp/ldl_fs_example/1.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/2.txt" with permissions "0"
-
-Exception must be thrown
-
-EXCEPTION: File "/tmp/ldl_fs_example/2.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/3.txt" with permissions "292"
-
-Creating file "/tmp/ldl_fs_example/4.txt" with permissions "0"
-
-Exception must be thrown
-
-EXCEPTION: File "/tmp/ldl_fs_example/4.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/5.txt" with permissions "0"
-
-Exception must be thrown
-
-EXCEPTION: File "/tmp/ldl_fs_example/5.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/6.txt" with permissions "0"
-
-Exception must be thrown
-
-EXCEPTION: File "/tmp/ldl_fs_example/6.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/7.txt" with permissions "292"
-
-Creating file "/tmp/ldl_fs_example/8.txt" with permissions "0"
-
-Exception must be thrown
-
-EXCEPTION: File "/tmp/ldl_fs_example/8.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/9.txt" with permissions "292"
-
-
-
-Clean up generated files ...
-
-Done
+Clean up generated files and directories ...

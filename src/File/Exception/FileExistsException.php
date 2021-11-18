@@ -10,7 +10,7 @@ namespace LDL\File\Exception;
  * Do not mistake ExistsException with ReadException as they are two different things.
  */
 
-class ExistsException extends FileException
+class FileExistsException extends FileException
 {
 
 }

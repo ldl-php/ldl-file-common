@@ -2,7 +2,7 @@
 
 namespace LDL\File\Validator;
 
-use LDL\File\Helper\PathHelper;
+use LDL\File\Helper\FilePathHelper;
 use LDL\Validators\NegatedValidatorInterface;
 use LDL\Validators\Traits\NegatedValidatorTrait;
 use LDL\Validators\Traits\ValidatorDescriptionTrait;
@@ -27,7 +27,7 @@ class PathValidator implements ValidatorInterface, NegatedValidatorInterface, Va
         string $description=null
     )
     {
-        $this->path = PathHelper::getAbsolutePath($path);
+        $this->path = FilePathHelper::getAbsolutePath($path);
         $this->_tNegated = $negated;
 
         if(null !== $description){

@@ -15,13 +15,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - feature/1200748544420027 - Add FileTypeHelper & standard exceptions
 - feature/1200826040420667 - Add PathValidator / Add PathHelper / Use FileTypeHelper on DirectoryCollection
 - feature/1201380558680875 - Add getLines method to ReadableFileCollection and ReadWriteFileCollection / Add File, Directory and Tree 
+- feature/1201393911175051 - Create generic file collection / Add useful methods to FileTree::class
 
 ### Changed
 
-- fixes/1200713875634262 - Change reset to onBeforeValidate on HasRegexContentValidator. Add getChainItems on each collection
+- fix/1200713875634262 - Change reset to onBeforeValidate on HasRegexContentValidator. Add getChainItems on each collection
 - fix/1200630491660400 - Remove validators config
 - fix/1200624131677611 - Fix validators - Remove dumpable and BasicValidatorConfig. Also add a description
 - fix/1200410494797363 - Fix HasRegexContentValidator
 - fix/1200366404543319 - Fix validators and configs to comply with ldl-validators
-- fix/1201302588223605 - Move FileTypeHelper constants to FileTypeConstants
+- fix/1201302588223604 - Move FileTypeHelper constants to FileTypeConstants
+
 

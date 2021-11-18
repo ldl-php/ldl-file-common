@@ -1,11 +1,15 @@
+Create some random files in /tmp/ldl-file-common and append them to a Directory collection
+
 Create "LDL\File\Collection\JsonFileCollection" instance
 
 Check validators
-"(LDL\Validators\ClassComplianceValidator && LDL\File\Validator\ReadableFileValidator && LDL\File\Validator\JsonFileValidator)"
-""Validate that a given class complies with class: LDL\File\File in strict mode" && "Validate that a file is readable" && "Validate that a file is a json file""
+"(LDL\Validators\InterfaceComplianceValidator && LDL\File\Validator\ReadableFileValidator && LDL\File\Validator\JsonFileValidator)"
+""Validate that a given class implements: LDL\File\Contracts\FileInterface" && "Validate that a file is readable" && "Validate that a file is a json file""
 Append JSON file to the collection (no exception must be thrown) ...
 OK!
-Append regular file to the collection, exception must be thrown
+Append regular file to the collection, EXCEPTION must be thrown
 EXCEPTION: Could not decode file "/home/ldl/ldl-project/ldl-file-common/example/JsonFileCollectionExample.php" as JSON, Decode error: Syntax error
 
 Clean up generated files ...
+
+Clean up generated files and directories ...

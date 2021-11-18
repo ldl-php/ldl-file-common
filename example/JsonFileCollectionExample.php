@@ -6,12 +6,9 @@ use LDL\Validators\Chain\Dumper\ValidatorChainExprDumper;
 use LDL\Validators\Chain\Dumper\ValidatorChainHumanDumper;
 
 require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/lib/example-helper.php';
 
-$tmpDir = sprintf('%s%s%s',sys_get_temp_dir(), \DIRECTORY_SEPARATOR, 'ldl_fs_example');
-
-if (!mkdir($tmpDir, 0755) && !is_dir($tmpDir)) {
-    throw new \RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
-}
+$tmpDir = createTestFiles();
 
 echo sprintf(
     'Create "%s" instance%s',
@@ -31,17 +28,17 @@ $json = [
     'lastname' => 'lastname'
 ];
 
-$file = sprintf('%s%s%s.txt', $tmpDir, \DIRECTORY_SEPARATOR, 'test.json');
-
-file_put_contents($file, json_encode($json,\JSON_THROW_ON_ERROR));
+$jsonFile = $tmpDir->mkfile('test.json', json_encode($json,\JSON_THROW_ON_ERROR));
 
 echo "Append JSON file to the collection (no exception must be thrown) ...\n";
-$jsonCollection->append($file);
+
+$jsonCollection->append($jsonFile);
+
 echo "OK!\n";
 
 try {
 
-    echo "Append regular file to the collection, exception must be thrown\n";
+    echo "Append regular file to the collection, EXCEPTION must be thrown\n";
     $jsonCollection->append(__FILE__);
 
 }catch(JsonFileDecodeException $e) {
@@ -52,5 +49,4 @@ try {
 
 echo "\nClean up generated files ...\n";
 
-unlink($file);
-rmdir($tmpDir);
+deleteTestDir();
