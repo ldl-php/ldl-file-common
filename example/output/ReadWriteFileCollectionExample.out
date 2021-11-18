@@ -5,9 +5,9 @@ Create "LDL\File\Collection\ReadWriteFileCollection" instance
 
 Check validators
 
-"(LDL\File\Validator\FileExistsValidator && LDL\File\Validator\ReadableFileValidator && LDL\File\Validator\WritableFileValidator)"
+"(LDL\Validators\InterfaceComplianceValidator && LDL\File\Validator\FileExistsValidator && LDL\File\Validator\ReadableFileValidator && LDL\File\Validator\WritableFileValidator)"
 
-""Validate that a file exist" && "Validate that a file is readable" && "Validate that a file is writable""
+""Validate that a given class implements: LDL\File\Contracts\FileInterface" && "Validate that a file exist" && "Validate that a file is readable" && "Validate that a file is writable""
 
 Creating file "/tmp/ldl_fs_example/0.txt" with permissions "420"
 
@@ -19,7 +19,13 @@ READ EXCEPTION: File "/tmp/ldl_fs_example/1.txt" is not readable!
 
 
 
-Creating file "/tmp/ldl_fs_example/2.txt" with permissions "420"
+Creating file "/tmp/ldl_fs_example/2.txt" with permissions "292"
+
+Exception must be thrown
+
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/2.txt" is not writable!
+
+
 
 Creating file "/tmp/ldl_fs_example/3.txt" with permissions "292"
 
@@ -47,21 +53,9 @@ READ EXCEPTION: File "/tmp/ldl_fs_example/6.txt" is not readable!
 
 
 
-Creating file "/tmp/ldl_fs_example/7.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/7.txt" with permissions "420"
 
-Exception must be thrown
-
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/7.txt" is not writable!
-
-
-
-Creating file "/tmp/ldl_fs_example/8.txt" with permissions "292"
-
-Exception must be thrown
-
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/8.txt" is not writable!
-
-
+Creating file "/tmp/ldl_fs_example/8.txt" with permissions "420"
 
 Creating file "/tmp/ldl_fs_example/9.txt" with permissions "146"
 
@@ -71,7 +65,13 @@ READ EXCEPTION: File "/tmp/ldl_fs_example/9.txt" is not readable!
 
 
 
-Creating file "/tmp/ldl_fs_example/10.txt" with permissions "420"
+Creating file "/tmp/ldl_fs_example/10.txt" with permissions "292"
+
+Exception must be thrown
+
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/10.txt" is not writable!
+
+
 
 Creating file "/tmp/ldl_fs_example/11.txt" with permissions "292"
 
@@ -81,11 +81,11 @@ WRITE EXCEPTION: File "/tmp/ldl_fs_example/11.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/12.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/12.txt" with permissions "146"
 
 Exception must be thrown
 
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/12.txt" is not writable!
+READ EXCEPTION: File "/tmp/ldl_fs_example/12.txt" is not readable!
 
 
 
@@ -93,7 +93,13 @@ Creating file "/tmp/ldl_fs_example/13.txt" with permissions "420"
 
 Creating file "/tmp/ldl_fs_example/14.txt" with permissions "420"
 
-Creating file "/tmp/ldl_fs_example/15.txt" with permissions "420"
+Creating file "/tmp/ldl_fs_example/15.txt" with permissions "292"
+
+Exception must be thrown
+
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/15.txt" is not writable!
+
+
 
 Creating file "/tmp/ldl_fs_example/16.txt" with permissions "146"
 
@@ -111,7 +117,13 @@ WRITE EXCEPTION: File "/tmp/ldl_fs_example/17.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/18.txt" with permissions "420"
+Creating file "/tmp/ldl_fs_example/18.txt" with permissions "146"
+
+Exception must be thrown
+
+READ EXCEPTION: File "/tmp/ldl_fs_example/18.txt" is not readable!
+
+
 
 Creating file "/tmp/ldl_fs_example/19.txt" with permissions "292"
 
@@ -129,19 +141,19 @@ READ EXCEPTION: File "/tmp/ldl_fs_example/20.txt" is not readable!
 
 
 
-Creating file "/tmp/ldl_fs_example/21.txt" with permissions "146"
+Creating file "/tmp/ldl_fs_example/21.txt" with permissions "292"
 
 Exception must be thrown
 
-READ EXCEPTION: File "/tmp/ldl_fs_example/21.txt" is not readable!
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/21.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/22.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/22.txt" with permissions "146"
 
 Exception must be thrown
 
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/22.txt" is not writable!
+READ EXCEPTION: File "/tmp/ldl_fs_example/22.txt" is not readable!
 
 
 
@@ -157,33 +169,39 @@ WRITE EXCEPTION: File "/tmp/ldl_fs_example/24.txt" is not writable!
 
 Creating file "/tmp/ldl_fs_example/25.txt" with permissions "420"
 
-Creating file "/tmp/ldl_fs_example/26.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/26.txt" with permissions "146"
 
 Exception must be thrown
 
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/26.txt" is not writable!
+READ EXCEPTION: File "/tmp/ldl_fs_example/26.txt" is not readable!
 
 
 
-Creating file "/tmp/ldl_fs_example/27.txt" with permissions "420"
-
-Creating file "/tmp/ldl_fs_example/28.txt" with permissions "146"
+Creating file "/tmp/ldl_fs_example/27.txt" with permissions "292"
 
 Exception must be thrown
 
-READ EXCEPTION: File "/tmp/ldl_fs_example/28.txt" is not readable!
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/27.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/29.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/28.txt" with permissions "292"
 
 Exception must be thrown
 
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/29.txt" is not writable!
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/28.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/30.txt" with permissions "420"
+Creating file "/tmp/ldl_fs_example/29.txt" with permissions "420"
+
+Creating file "/tmp/ldl_fs_example/30.txt" with permissions "292"
+
+Exception must be thrown
+
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/30.txt" is not writable!
+
+
 
 Creating file "/tmp/ldl_fs_example/31.txt" with permissions "146"
 
@@ -205,13 +223,7 @@ Creating file "/tmp/ldl_fs_example/33.txt" with permissions "420"
 
 Creating file "/tmp/ldl_fs_example/34.txt" with permissions "420"
 
-Creating file "/tmp/ldl_fs_example/35.txt" with permissions "146"
-
-Exception must be thrown
-
-READ EXCEPTION: File "/tmp/ldl_fs_example/35.txt" is not readable!
-
-
+Creating file "/tmp/ldl_fs_example/35.txt" with permissions "420"
 
 Creating file "/tmp/ldl_fs_example/36.txt" with permissions "292"
 
@@ -221,41 +233,35 @@ WRITE EXCEPTION: File "/tmp/ldl_fs_example/36.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/37.txt" with permissions "146"
+Creating file "/tmp/ldl_fs_example/37.txt" with permissions "292"
 
 Exception must be thrown
 
-READ EXCEPTION: File "/tmp/ldl_fs_example/37.txt" is not readable!
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/37.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/38.txt" with permissions "292"
-
-Exception must be thrown
-
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/38.txt" is not writable!
-
-
+Creating file "/tmp/ldl_fs_example/38.txt" with permissions "420"
 
 Creating file "/tmp/ldl_fs_example/39.txt" with permissions "420"
 
-Creating file "/tmp/ldl_fs_example/40.txt" with permissions "146"
+Creating file "/tmp/ldl_fs_example/40.txt" with permissions "292"
 
 Exception must be thrown
 
-READ EXCEPTION: File "/tmp/ldl_fs_example/40.txt" is not readable!
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/40.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/41.txt" with permissions "146"
+Creating file "/tmp/ldl_fs_example/41.txt" with permissions "420"
+
+Creating file "/tmp/ldl_fs_example/42.txt" with permissions "146"
 
 Exception must be thrown
 
-READ EXCEPTION: File "/tmp/ldl_fs_example/41.txt" is not readable!
+READ EXCEPTION: File "/tmp/ldl_fs_example/42.txt" is not readable!
 
 
-
-Creating file "/tmp/ldl_fs_example/42.txt" with permissions "420"
 
 Creating file "/tmp/ldl_fs_example/43.txt" with permissions "420"
 
@@ -269,35 +275,17 @@ WRITE EXCEPTION: File "/tmp/ldl_fs_example/45.txt" is not writable!
 
 
 
-Creating file "/tmp/ldl_fs_example/46.txt" with permissions "292"
+Creating file "/tmp/ldl_fs_example/46.txt" with permissions "420"
+
+Creating file "/tmp/ldl_fs_example/47.txt" with permissions "420"
+
+Creating file "/tmp/ldl_fs_example/48.txt" with permissions "420"
+
+Creating file "/tmp/ldl_fs_example/49.txt" with permissions "292"
 
 Exception must be thrown
 
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/46.txt" is not writable!
-
-
-
-Creating file "/tmp/ldl_fs_example/47.txt" with permissions "292"
-
-Exception must be thrown
-
-WRITE EXCEPTION: File "/tmp/ldl_fs_example/47.txt" is not writable!
-
-
-
-Creating file "/tmp/ldl_fs_example/48.txt" with permissions "146"
-
-Exception must be thrown
-
-READ EXCEPTION: File "/tmp/ldl_fs_example/48.txt" is not readable!
-
-
-
-Creating file "/tmp/ldl_fs_example/49.txt" with permissions "146"
-
-Exception must be thrown
-
-READ EXCEPTION: File "/tmp/ldl_fs_example/49.txt" is not readable!
+WRITE EXCEPTION: File "/tmp/ldl_fs_example/49.txt" is not writable!
 
 
 

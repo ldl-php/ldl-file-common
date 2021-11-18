@@ -3,12 +3,12 @@
 namespace LDL\File\Helper;
 
 use LDL\File\Directory;
-use LDL\File\Exception\ExistsException;
+use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileTypeException;
-use LDL\File\Exception\ReadException;
-use LDL\File\Exception\WriteException;
+use LDL\File\Exception\FileReadException;
+use LDL\File\Exception\FileWriteException;
 use LDL\File\File;
-use LDL\File\Tree;
+use LDL\File\FileTree;
 
 final class DirectoryHelper
 {
@@ -16,18 +16,18 @@ final class DirectoryHelper
      * @param string $path
      * @param int $mode
      * @return Directory
-     * @throws ExistsException
-     * @throws WriteException
+     * @throws FileExistsException
+     * @throws FileWriteException
      * @throws FileTypeException
      */
     public static function create(string $path, int $mode) : Directory
     {
         if(is_dir($path)){
-            throw new ExistsException("Directory \"$path\" already exists!");
+            throw new FileExistsException("Directory \"$path\" already exists!");
         }
 
         if(!@mkdir($path, $mode) && !is_dir($path)){
-            throw new WriteException("Unable to create directory: $path");
+            throw new FileWriteException("Unable to create directory: $path");
         }
 
         return new Directory($path);
@@ -43,8 +43,8 @@ final class DirectoryHelper
      * @param string $dir
      * @return bool
      * @throws FileTypeException
-     * @throws ReadException
-     * @throws WriteException
+     * @throws FileReadException
+     * @throws FileWriteException
      */
     public static function delete(string $dir) : bool
     {
@@ -52,12 +52,8 @@ final class DirectoryHelper
             throw new FileTypeException("Given path \"$dir\" is not a directory!");
         }
 
-        if(!is_readable($dir)){
-            throw new ReadException("Directory \"$dir\" is not readable!");
-        }
-
         if(!is_writable($dir)){
-            throw new WriteException("Directory \"$dir\" is not writable!");
+            throw new FileWriteException("Directory \"$dir\" is not writable!");
         }
 
         $files = scandir($dir);
@@ -77,31 +73,34 @@ final class DirectoryHelper
 
     public static function copy(string $source, string $dest) : Directory
     {
-        throw new \Exception('@TODO Copy directory recursively');
+        throw new \LogicException('@TODO Copy directory recursively');
     }
 
     /**
+     * Obtains a FileTree
+     *
      * @param string $path
-     * @return Tree
+     * @return FileTree
+     * @throws FileExistsException
+     * @throws FileReadException
      * @throws FileTypeException
-     * @throws ReadException
      */
-    public static function getTree(string $path) : Tree
+    public static function getTree(string $path) : FileTree
     {
         $dir = new Directory($path);
 
         if(!$dir->isReadable()){
-            throw new ReadException("Directory \"$path\" is not readable!");
+            throw new FileReadException("Directory \"$path\" is not readable!");
         }
 
-        $tree = new Tree($dir);
+        $tree = new FileTree($dir);
 
         foreach(scandir($path) as $file){
             if('.' === $file || '..' === $file){
                 continue;
             }
-            $file = PathHelper::createAbsolutePath($dir->toString(), $file);
-            $tree->append(is_dir($file) ? new Directory($file) : new File($file));
+            $file = FilePathHelper::createAbsolutePath($dir->toString(), $file);
+            $tree->append(!is_file($file) ? new Directory($file) : new File($file));
         }
 
         return $tree;
@@ -110,22 +109,23 @@ final class DirectoryHelper
     /**
      * @param string $path
      * @return iterable
+     * @throws FileExistsException
+     * @throws FileReadException
      * @throws FileTypeException
-     * @throws ReadException
      */
     public static function iterateTree(string $path) : iterable
     {
         $dir = new Directory($path);
 
         if(!$dir->isReadable()){
-            throw new ReadException("Directory $dir is not readable!");
+            throw new FileReadException("Directory $dir is not readable!");
         }
 
         foreach(scandir($path) as $file){
             if('.' === $file || '..' === $file){
                 continue;
             }
-            $file = PathHelper::createAbsolutePath($dir->toString(), $file);
+            $file = FilePathHelper::createAbsolutePath($dir->toString(), $file);
             yield is_dir($file) ? new Directory($file) : new File($file);
         }
     }

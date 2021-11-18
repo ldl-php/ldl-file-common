@@ -10,7 +10,7 @@ namespace LDL\File\Exception;
  * with the ExistsException as this one refers to file permissions, not to file existence.
  */
 
-class ReadException extends FileException
+class FileReadException extends FileException
 {
 
 }

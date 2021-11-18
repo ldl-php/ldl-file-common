@@ -2,7 +2,7 @@
 
 namespace LDL\File\Helper;
 
-final class PathHelper
+final class FilePathHelper
 {
     /**
      * Given a relative path, it will return it's absolute path, even if the path does not exists

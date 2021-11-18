@@ -2,7 +2,7 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use LDL\File\Helper\PathHelper;
+use LDL\File\Helper\FilePathHelper;
 
 function testPath(string $relative, string $absolute, bool $mustExist=false) : void
 {
@@ -12,7 +12,7 @@ function testPath(string $relative, string $absolute, bool $mustExist=false) : v
         echo "Given path MUST exist\n";
     }
 
-    $resolved = PathHelper::getAbsolutePath($relative, $mustExist);
+    $resolved = FilePathHelper::getAbsolutePath($relative, $mustExist);
 
     if ($resolved !== $absolute) {
         throw new \RuntimeException("Failed to assert $resolved === $absolute");
@@ -64,7 +64,7 @@ if(!$thrown){
 echo "\nTest createAbsolutePath\n";
 echo "#########################################\n\n";
 
-$result = PathHelper::createAbsolutePath('home','ldl','ldl-project');
+$result = FilePathHelper::createAbsolutePath('home','ldl','ldl-project');
 $expected = '/home/ldl/ldl-project';
 
 echo "Result is: $result\n";

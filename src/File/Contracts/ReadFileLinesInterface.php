@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace LDL\File\Collection\Contracts;
+namespace LDL\File\Contracts;
 
 use LDL\Type\Collection\Types\String\StringCollection;
 

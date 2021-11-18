@@ -2,7 +2,8 @@
 
 namespace LDL\File\Collection\Traits;
 
-use LDL\File\Collection\Contracts\ReadFileLinesInterface;
+use LDL\File\Contracts\FileInterface;
+use LDL\File\Contracts\ReadFileLinesInterface;
 use LDL\File\File;
 use LDL\Framework\Helper\ClassHelper;
 use LDL\Type\Collection\Types\String\StringCollection;
@@ -14,6 +15,7 @@ trait ReadFileLinesInterfaceTrait
     /**
      * Reads all lines from a file collection and returns them as a string collection
      * @return StringCollection
+     * @throws \Exception
      */
     public function getLines() : StringCollection
     {
@@ -22,7 +24,7 @@ trait ReadFileLinesInterfaceTrait
         $return = new StringCollection();
 
         /**
-         * @var File $file
+         * @var FileInterface $file
          */
         foreach($this as $file){
             $return->appendMany($file->getLines());
@@ -38,10 +40,10 @@ trait ReadFileLinesInterfaceTrait
     public function iterateLines() : iterable
     {
         /**
-         * @var File $file
+         * @var FileInterface $file
          */
         foreach($this as $file){
-            $fp = fopen($file->getRealPath(), 'rb');
+            $fp = fopen($file->getPath(), 'rb');
 
             while($line = fgets($fp)){
                 yield $line;

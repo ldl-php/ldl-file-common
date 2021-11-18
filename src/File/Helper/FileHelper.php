@@ -2,31 +2,31 @@
 
 namespace LDL\File\Helper;
 
-use LDL\File\Exception\ExistsException;
+use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileTypeException;
-use LDL\File\Exception\ReadException;
+use LDL\File\Exception\FileReadException;
 use LDL\File\Constants\FileTypeConstants;
-use LDL\File\Exception\WriteException;
+use LDL\File\Exception\FileWriteException;
 use LDL\Type\Collection\Types\String\StringCollection;
 
 final class FileHelper
 {
     /**
      * @param string $path
-     * @throws ExistsException if file does not exists
-     * @throws ReadException if file permissions could not be read
+     * @throws FileExistsException if file does not exists
+     * @throws FileReadException if file permissions could not be read
      * @return string
      */
     public static function getType(string $path) : string
     {
         if(!file_exists($path)){
-            throw new ExistsException('Can not get permissions from a file which does not exists');
+            throw new FileExistsException('Can not get permissions from a file which does not exists');
         }
 
         $perms = fileperms($path);
 
         if(false === $perms){
-            throw new ReadException('Could not get file permissions');
+            throw new FileReadException('Could not get file permissions');
         }
 
         switch ($perms & 0xF000) {
@@ -64,12 +64,12 @@ final class FileHelper
      * @param string $file
      * @return StringCollection
      * @throws FileTypeException
-     * @throws ReadException
+     * @throws FileReadException
      */
     public static function getLines(string $file) : StringCollection
     {
         if(!is_readable($file)){
-            throw new ReadException("File $file is not readable!");
+            throw new FileReadException("File $file is not readable!");
         }
 
         if(is_dir($file)){
@@ -86,12 +86,12 @@ final class FileHelper
      * @param string $file
      * @return iterable
      * @throws FileTypeException
-     * @throws ReadException
+     * @throws FileReadException
      */
     public static function iterateLines(string $file) : iterable
     {
         if(!is_readable($file)){
-            throw new ReadException("File $file is not readable!");
+            throw new FileReadException("File $file is not readable!");
         }
 
         if(is_dir($file)){
@@ -115,13 +115,13 @@ final class FileHelper
      * @param string $dest
      * @param bool $overwrite
      *
-     * @throws WriteException
-     * @throws ReadException
+     * @throws FileWriteException
+     * @throws FileReadException
      */
     public static function copy(string $source, string $dest, bool $overwrite=false) : void
     {
         if(!is_readable($source)){
-            throw new ReadException("Source file \"$source\" is not readable");
+            throw new FileReadException("Source file \"$source\" is not readable");
         }
 
         if(false === $overwrite && file_exists($dest)){
@@ -129,11 +129,32 @@ final class FileHelper
                 'Destination file %s already exists, if you really want to overwrite it, set the overwrite flag to true',
                 $dest
             );
-            throw new WriteException($msg);
+            throw new FileWriteException($msg);
         }
 
         if(!copy($source, $dest)){
-            throw new WriteException('Could not copy file from "%s" to "%s"', $source, $dest);
+            throw new FileWriteException('Could not copy file from "%s" to "%s"', $source, $dest);
+        }
+    }
+
+    /**
+     * @param string $file
+     * @throws FileExistsException
+     * @throws FileReadException
+     * @throws FileWriteException
+     */
+    public static function delete(string $file) : void
+    {
+        if(!file_exists($file)){
+            throw new FileExistsException("File \"$file\" does not exists!");
+        }
+
+        if(!is_readable($file)){
+            throw new FileReadException("File \"$file\" is not readable");
+        }
+
+        if(false === unlink($file)){
+            throw new FileWriteException("Could not delete file: \"$file\"");
         }
     }
 

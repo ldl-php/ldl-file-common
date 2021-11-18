@@ -12,7 +12,7 @@ trait AppendFileAsStringTrait
      * @param $item
      * @param null $key
      * @return CollectionInterface
-     * @throws \LDL\File\Exception\ExistsException
+     * @throws \LDL\File\Exception\FileExistsException
      * @throws \LDL\File\Exception\FileTypeException
      */
     public function append($item, $key = null): CollectionInterface

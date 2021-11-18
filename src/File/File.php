@@ -2,18 +2,22 @@
 
 namespace LDL\File;
 
-use LDL\File\Collection\Contracts\ReadFileLinesInterface;
-use LDL\File\Exception\ExistsException;
+use LDL\File\Contracts\DirectoryInterface;
+use LDL\File\Contracts\FileInterface;
+use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileTypeException;
-use LDL\File\Exception\ReadException;
-use LDL\File\Exception\WriteException;
+use LDL\File\Exception\FileWriteException;
 use LDL\File\Helper\FileHelper;
-use LDL\File\Helper\PermissionsHelper;
-use LDL\Framework\Base\Contracts\Type\ToStringInterface;
+use LDL\File\Helper\FilePermsHelper;
 use LDL\Type\Collection\Types\String\StringCollection;
 
-final class File extends \SplFileInfo implements ToStringInterface, ReadFileLinesInterface
+final class File implements FileInterface
 {
+
+    /**
+     * @var string
+     */
+    private $path;
 
     /**
      * @var bool
@@ -25,21 +29,15 @@ final class File extends \SplFileInfo implements ToStringInterface, ReadFileLine
      * the self::create method must be called.
      *
      * @param string $file
+     * @throws FileExistsException
      * @throws FileTypeException
-     * @throws ExistsException
      */
     public function __construct(string $file)
     {
-        $exists = file_exists($file);
-        $isDir = is_dir($file);
+        $this->path = realpath($file);
 
-        if($exists && !$isDir){
-            parent::__construct($file);
-            return;
-        }
-
-        if(!$exists){
-            throw new ExistsException(
+        if(!$this->path){
+            throw new FileExistsException(
                 sprintf(
                     'File %s does not exists, if you want to create it please use: %s::%s',
                     $file,
@@ -49,7 +47,7 @@ final class File extends \SplFileInfo implements ToStringInterface, ReadFileLine
             );
         }
 
-        if($isDir){
+        if(is_dir($this->path)){
             throw new FileTypeException(
                 sprintf(
                     'Invalid file type provided, expected file, got directory: "%s"',
@@ -59,159 +57,142 @@ final class File extends \SplFileInfo implements ToStringInterface, ReadFileLine
         }
     }
 
-    /**
-     * @param string $file
-     * @param string|null $contents
-     * @param int $permissions
-     * @return File
-     * @throws FileTypeException
-     * @throws ReadException
-     * @throws WriteException
-     */
-    public static function create(string $file, string $contents=null, int $permissions=0644) : File
+    public function delete() : FileInterface
     {
-        if(is_dir($file)){
-            throw new \InvalidArgumentException("Given file path \"$file\" is a directory");
-        }
-
-        if(file_exists($file)){
-            throw new \InvalidArgumentException("File \"$file\" already exists!");
-        }
-
-        $fp = fopen($file, 'wb');
-        fwrite($fp, (string)$contents);
-        fclose($fp);
-
-        return (new self($file))
-            ->put($contents)
-            ->chmod($permissions);
-    }
-
-    /**
-     * @param int $permissions
-     * @return File
-     * @throws WriteException
-     * @throws ExistsException
-     */
-    public function chmod(int $permissions) : File
-    {
-        $this->checkIfDeleted(__METHOD__);
-
-        if(!$this->isWritable()){
-            throw new WriteException("File \"$this\" is not writable!");
-        }
-
-        PermissionsHelper::chmod($this->toString(), $permissions);
+        FileHelper::delete($this->toString());
+        $this->isDeleted = true;
         return $this;
     }
 
-    /**
-     * @return StringCollection
-     * @throws ReadException
-     * @throws FileTypeException
-     * @throws ExistsException
-     */
+    public function getType() : string
+    {
+        return FileHelper::getType((string)$this);
+    }
+
+    public static function create(
+        string $file,
+        ?string $contents,
+        ?int $permissions,
+        ?bool $overwrite=false
+    ) : FileInterface
+    {
+        $permissions = $permissions ?? 0644;
+        $contents = $contents ?? '';
+
+        if(false === $overwrite && file_exists($file)){
+            throw new FileExistsException("File \"$file\" already exists!");
+        }
+
+        if(false === file_put_contents($file, $contents)){
+            throw new FileWriteException("Failed to create file: $file");
+        }
+
+        return (new self($file))
+            ->chmod($permissions);
+    }
+
+    public function move(DirectoryInterface $to) : FileInterface
+    {
+        throw new \RuntimeException('@TODO move file to directory');
+    }
+
+    public function rename(string $name): FileInterface
+    {
+        throw new \RuntimeException('@TODO rename file');
+    }
+
+    public function chmod(int $permissions) : FileInterface
+    {
+        $this->checkIfDeleted(__METHOD__);
+        FilePermsHelper::chmod($this->toString(), $permissions);
+        return $this;
+    }
+
+    public function getPerms() : int
+    {
+        return FilePermsHelper::getPerms($this->toString());
+    }
+
     public function getLines() : StringCollection
     {
         $this->checkIfDeleted(__METHOD__);
         return FileHelper::getLines($this->toString());
     }
 
-    /**
-     * @return iterable
-     * @throws FileTypeException
-     * @throws ReadException
-     * @throws ExistsException
-     */
     public function iterateLines(): iterable
     {
         $this->checkIfDeleted(__METHOD__);
         yield from FileHelper::iterateLines($this->toString());
     }
 
-    /**
-     * @param string $contents
-     * @param string|null $newName
-     * @return File
-     * @throws FileTypeException
-     * @throws ReadException
-     * @throws WriteException
-     */
-    public function put(string $contents, string $newName=null) : File
+    public function put(string $contents, string $newName=null) : FileInterface
     {
         $file = trim($newName ?? $this->toString());
 
         if(!is_writable($file)){
-            throw new WriteException("File \"$file\" is not writable");
+            throw new FileWriteException("File \"$file\" is not writable");
         }
 
         if('' === $file){
             throw new \InvalidArgumentException('File name can not be empty');
         }
 
-        file_put_contents($file, $contents);
+        if(false === file_put_contents($file, $contents)){
+            throw new FileWriteException("Failed to write to file: {$this->path}");
+        }
 
         return new self($file);
     }
 
-    /**
-     * Appends $content to the file, if the file has been deleted an exception will be thrown
-     * @param string $content
-     * @return File
-     * @throws WriteException
-     * @throws ExistsException
-     */
-    public function append(string $content) : File
+    public function append(string $content) : FileInterface
     {
         $this->checkIfDeleted(__METHOD__);
 
         if(!is_writable($this->toString())){
-            throw new WriteException("File \"$this\" is not writable");
+            throw new FileWriteException("File \"$this\" is not writable");
         }
 
         file_put_contents($this->toString(), $content, \FILE_APPEND);
         return $this;
     }
 
-    /**
-     * @param string $dest
-     * @param bool $overwrite
-     * @return File
-     * @throws FileTypeException
-     * @throws ReadException
-     * @throws WriteException
-     */
-    public function copy(string $dest, bool $overwrite) : File
+    public function copy(string $dest, bool $overwrite) : FileInterface
     {
         FileHelper::copy($this->toString(), $dest, $overwrite);
         return new self($dest);
     }
 
-    /**
-     * Obtains the directory where this file is located
-     *
-     * @return Directory
-     * @throws FileTypeException
-     * @throws ExistsException
-     */
-    public function getDirectory() : Directory
+    public function getDirectory(int $levels=null) : DirectoryInterface
     {
+        $levels = $levels ?? 1;
         $this->checkIfDeleted(__METHOD__);
-        return new Directory($this->getPath());
+        return new Directory(dirname($this->path, $levels));
     }
 
-    /**
-     * @return bool
-     */
     public function isDeleted() : bool
     {
         return $this->isDeleted;
     }
 
+    public function isReadable(): bool
+    {
+        return is_readable($this->path);
+    }
+
+    public function isWritable(): bool
+    {
+        return is_writable($this->path);
+    }
+
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
     //<editor-fold desc="ToStringInterface methods">
     public function toString(): string
     {
-        return (string)$this->getRealPath();
+        return $this->path;
     }
 
     public function __toString(): string
@@ -224,7 +205,7 @@ final class File extends \SplFileInfo implements ToStringInterface, ReadFileLine
 
     /**
      * @param string $operation
-     * @throws ExistsException
+     * @throws FileExistsException
      */
     private function checkIfDeleted(string $operation) : void
     {
@@ -234,7 +215,7 @@ final class File extends \SplFileInfo implements ToStringInterface, ReadFileLine
 
         $msg = sprintf('Can not %s from file "%s", it has been deleted', $operation, $this->toString());
 
-        throw new ExistsException($msg);
+        throw new FileExistsException($msg);
     }
     //</editor-fold>
 }
