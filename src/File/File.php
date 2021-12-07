@@ -118,6 +118,12 @@ final class File implements FileInterface
         $this->checkIfDeleted(__METHOD__);
         return FileHelper::getLines($this->toString());
     }
+    
+    public function getLinesAsString() : string
+    {
+        $this->checkIfDeleted(__METHOD__);
+        return FileHelper::getLinesAsString($this->toString());
+    }
 
     public function iterateLines(): iterable
     {

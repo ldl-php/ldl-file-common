@@ -80,6 +80,27 @@ final class FileHelper
     }
 
     /**
+     * Returns lines from a file as a PHP string
+     *
+     * @param string $file
+     * @return string
+     * @throws FileReadException
+     * @throws FileTypeException
+     */
+    public static function getLinesAsString(string $file) : string
+    {
+        if(!is_readable($file)){
+            throw new FileReadException("File $file is not readable!");
+        }
+
+        if(is_dir($file)){
+            throw new FileTypeException("$file is a directory");
+        }
+
+        return implode('', file($file));
+    }
+
+    /**
      * Iterate through the lines of a file in a memory efficient way by using generators
      * Useful to traverse large files line by line.
      *

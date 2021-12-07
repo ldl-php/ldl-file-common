@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - feature/1200826040420667 - Add PathValidator / Add PathHelper / Use FileTypeHelper on DirectoryCollection
 - feature/1201380558680875 - Add getLines method to ReadableFileCollection and ReadWriteFileCollection / Add File, Directory and Tree 
 - feature/1201393911175051 - Create generic file collection / Add useful methods to FileTree::class
+- feature/1201480582483921 - Add File::getLinesAsString() : string method
 
 ### Changed
 
