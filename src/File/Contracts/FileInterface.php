@@ -8,6 +8,7 @@ use LDL\File\Exception\FileReadException;
 use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
 use LDL\Framework\Base\Contracts\Type\ToStringInterface;
+use LDL\Type\Collection\Types\String\StringCollection;
 
 interface FileInterface extends ToStringInterface, ReadFileLinesInterface
 {
@@ -28,6 +29,20 @@ interface FileInterface extends ToStringInterface, ReadFileLinesInterface
      * @throws FileExistsException
      */
     public function getDirectory(int $levels=null) : DirectoryInterface;
+
+    /**
+     * Returns lines from the file as an LDL StringCollection
+     *
+     * @return StringCollection
+     */
+    public function getLines() : StringCollection;
+
+    /**
+     * Returns lines from the file as a PHP string
+     * 
+     * @return string
+     */
+    public function getLinesAsString() : string;
 
     /**
      * Creates a new file

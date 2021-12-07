@@ -11,13 +11,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pthreat/ldl-framework-base.git",
-                "reference": "91a9899bed51cc962be3f4ea7de410da3621c3e5"
+                "url": "https://github.com/ldl-php/ldl-framework-base.git",
+                "reference": "838e996d6cfe47ef404c2666d2e75c41e7e4e895"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pthreat/ldl-framework-base/zipball/91a9899bed51cc962be3f4ea7de410da3621c3e5",
-                "reference": "91a9899bed51cc962be3f4ea7de410da3621c3e5",
+                "url": "https://api.github.com/repos/ldl-php/ldl-framework-base/zipball/838e996d6cfe47ef404c2666d2e75c41e7e4e895",
+                "reference": "838e996d6cfe47ef404c2666d2e75c41e7e4e895",
                 "shasum": ""
             },
             "require": {
@@ -43,23 +43,23 @@
             ],
             "description": "LDL Framework base contracts and exceptions",
             "support": {
-                "issues": "https://github.com/pthreat/ldl-framework-base/issues",
-                "source": "https://github.com/pthreat/ldl-framework-base/tree/master"
+                "issues": "https://github.com/ldl-php/ldl-framework-base/issues",
+                "source": "https://github.com/ldl-php/ldl-framework-base/tree/master"
             },
-            "time": "2021-10-27T14:09:15+00:00"
+            "time": "2021-12-03T14:38:19+00:00"
         },
         {
             "name": "ldl-framework/typed-collection",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pthreat/ldl-typed-collection.git",
-                "reference": "69d6700bd67067392f6195837ba7f6ac292ae07a"
+                "url": "https://github.com/ldl-php/ldl-typed-collection.git",
+                "reference": "074c4ebc45a555aef007837d15a2f814db0a6323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pthreat/ldl-typed-collection/zipball/69d6700bd67067392f6195837ba7f6ac292ae07a",
-                "reference": "69d6700bd67067392f6195837ba7f6ac292ae07a",
+                "url": "https://api.github.com/repos/ldl-php/ldl-typed-collection/zipball/074c4ebc45a555aef007837d15a2f814db0a6323",
+                "reference": "074c4ebc45a555aef007837d15a2f814db0a6323",
                 "shasum": ""
             },
             "require": {
@@ -93,22 +93,22 @@
                 "type"
             ],
             "support": {
-                "issues": "https://github.com/pthreat/ldl-typed-collection/issues",
-                "source": "https://github.com/pthreat/ldl-typed-collection/tree/fixes/1201067148929295"
+                "issues": "https://github.com/ldl-php/ldl-typed-collection/issues",
+                "source": "https://github.com/ldl-php/ldl-typed-collection/tree/master"
             },
-            "time": "2021-11-01T11:11:56+00:00"
+            "time": "2021-12-07T12:52:53+00:00"
         },
         {
             "name": "ldl-framework/validators",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pthreat/ldl-validators.git",
+                "url": "https://github.com/ldl-php/ldl-validators.git",
                 "reference": "72874a9f09205b836f4a364ff9c03742139aae97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pthreat/ldl-validators/zipball/72874a9f09205b836f4a364ff9c03742139aae97",
+                "url": "https://api.github.com/repos/ldl-php/ldl-validators/zipball/72874a9f09205b836f4a364ff9c03742139aae97",
                 "reference": "72874a9f09205b836f4a364ff9c03742139aae97",
                 "shasum": ""
             },
@@ -141,8 +141,8 @@
             "description": "LDL Framework validators",
             "homepage": "https://github.com/pthreat/ldl-validators",
             "support": {
-                "issues": "https://github.com/pthreat/ldl-validators/issues",
-                "source": "https://github.com/pthreat/ldl-validators/tree/master"
+                "issues": "https://github.com/ldl-php/ldl-validators/issues",
+                "source": "https://github.com/ldl-php/ldl-validators/tree/master"
             },
             "time": "2021-10-27T14:35:14+00:00"
         },
@@ -311,16 +311,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v5.3.10",
+            "version": "v5.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "875432adb5f5570fff21036fd22aee244636b7d1"
+                "reference": "89ab66eaef230c9cd1992de2e9a1b26652b127b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/875432adb5f5570fff21036fd22aee244636b7d1",
-                "reference": "875432adb5f5570fff21036fd22aee244636b7d1",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/89ab66eaef230c9cd1992de2e9a1b26652b127b9",
+                "reference": "89ab66eaef230c9cd1992de2e9a1b26652b127b9",
                 "shasum": ""
             },
             "require": {
@@ -334,8 +334,9 @@
             },
             "require-dev": {
                 "ext-iconv": "*",
-                "symfony/console": "^4.4|^5.0",
-                "symfony/process": "^4.4|^5.0",
+                "symfony/console": "^4.4|^5.0|^6.0",
+                "symfony/process": "^4.4|^5.0|^6.0",
+                "symfony/uid": "^5.1|^6.0",
                 "twig/twig": "^2.13|^3.0.4"
             },
             "suggest": {
@@ -379,7 +380,7 @@
                 "dump"
             ],
             "support": {
-                "source": "https://github.com/symfony/var-dumper/tree/v5.3.10"
+                "source": "https://github.com/symfony/var-dumper/tree/v5.4.0"
             },
             "funding": [
                 {
@@ -395,7 +396,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-26T09:30:15+00:00"
+            "time": "2021-11-29T15:30:56+00:00"
         }
     ],
     "packages-dev": [],
@@ -412,5 +413,5 @@
         "ext-fileinfo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
