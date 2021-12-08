@@ -4,6 +4,7 @@ namespace LDL\File\Collection;
 
 use LDL\File\Collection\Contracts\FileCollectionInterface;
 use LDL\File\Collection\Traits\AppendFileAsStringTrait;
+use LDL\File\Collection\Traits\FileCollectionFactoryTrait;
 use LDL\File\Contracts\FileInterface;
 use LDL\File\Validator\FileExistsValidator;
 use LDL\File\Validator\WritableFileValidator;
@@ -15,6 +16,7 @@ final class WritableFileCollection extends AbstractTypedCollection implements Fi
 {
     use AppendValueValidatorChainTrait;
     use AppendFileAsStringTrait;
+    use FileCollectionFactoryTrait;
 
     public function __construct(iterable $items = null)
     {

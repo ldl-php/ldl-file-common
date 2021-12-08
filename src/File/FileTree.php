@@ -14,19 +14,19 @@ use LDL\File\Contracts\DirectoryInterface;
 use LDL\File\Contracts\FileInterface;
 use LDL\File\Exception\FileWriteException;
 use LDL\File\Helper\DirectoryHelper;
-use LDL\Framework\Base\Collection\Contracts\FilterByClassInterface;
+use LDL\Framework\Base\Collection\Contracts\FilterByInterface;
 use LDL\Framework\Base\Collection\Traits\FilterByClassInterfaceTrait;
+use LDL\Framework\Base\Collection\Traits\FilterByInterfaceTrait;
 use LDL\Framework\Helper\IterableHelper;
 use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
 use LDL\Validators\Chain\OrValidatorChain;
-use LDL\Validators\ClassComplianceValidator;
 use LDL\Validators\InterfaceComplianceValidator;
 
-final class FileTree extends AbstractTypedCollection implements FilterByClassInterface
+final class FileTree extends AbstractTypedCollection implements FilterByInterface
 {
     use AppendValueValidatorChainTrait;
-    use FilterByClassInterfaceTrait;
+    use FilterByInterfaceTrait;
 
     /**
      * @var Directory
@@ -84,7 +84,7 @@ final class FileTree extends AbstractTypedCollection implements FilterByClassInt
      */
     public function filterFiles() : FileCollection
     {
-        return new FileCollection($this->filterByClass(File::class));
+        return new FileCollection($this->filterByInterface(FileInterface::class));
     }
 
     /**
@@ -93,7 +93,7 @@ final class FileTree extends AbstractTypedCollection implements FilterByClassInt
      */
     public function filterDirectories() : DirectoryCollection
     {
-        return new DirectoryCollection($this->filterByClass(Directory::class));
+        return new DirectoryCollection($this->filterByInterface(DirectoryInterface::class));
     }
 
     /**
