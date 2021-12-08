@@ -2,6 +2,8 @@
 
 namespace LDL\File\Collection\Contracts;
 
+use LDL\Framework\Base\Contracts\ArrayFactoryInterface;
+use LDL\Framework\Base\Contracts\IterableFactoryInterface;
 use LDL\Type\Collection\TypedCollectionInterface;
 
 /**
@@ -11,7 +13,7 @@ use LDL\Type\Collection\TypedCollectionInterface;
  * There are no custom methods *yet*
  */
 
-interface DirectoryCollectionInterface extends TypedCollectionInterface
+interface DirectoryCollectionInterface extends TypedCollectionInterface, IterableFactoryInterface, ArrayFactoryInterface
 {
 
 }

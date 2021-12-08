@@ -4,6 +4,7 @@ namespace LDL\File\Collection;
 
 use LDL\File\Collection\Contracts\FileCollectionInterface;
 use LDL\File\Collection\Traits\AppendFileAsStringTrait;
+use LDL\File\Collection\Traits\FileCollectionFactoryTrait;
 use LDL\File\Collection\Traits\ReadFileLinesInterfaceTrait;
 use LDL\File\Contracts\FileInterface;
 use LDL\File\Contracts\ReadFileLinesInterface;
@@ -18,6 +19,7 @@ final class JsonFileCollection extends AbstractTypedCollection implements FileCo
     use AppendValueValidatorChainTrait;
     use AppendFileAsStringTrait;
     use ReadFileLinesInterfaceTrait;
+    use FileCollectionFactoryTrait;
 
     public function __construct(iterable $items = null)
     {

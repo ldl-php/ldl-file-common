@@ -1,0 +1,22 @@
+Create some random files in /tmp/ldl-file-common and append them to a Directory collection
+
+Get test directory tree
+####################################################
+Create a FileCollection by filtering directories in the tree:
+Convert FileCollection to array:
+
+Create a FileCollection fromIterable:
+
+Print files:
+File /tmp/ldl-file-common/.hidden_11
+File /tmp/ldl-file-common/.hidden_12
+File /tmp/ldl-file-common/.hidden_13
+File /tmp/ldl-file-common/.hidden_14
+File /tmp/ldl-file-common/.hidden_15
+File /tmp/ldl-file-common/1.txt
+File /tmp/ldl-file-common/3.txt
+File /tmp/ldl-file-common/5.txt
+File /tmp/ldl-file-common/7.txt
+File /tmp/ldl-file-common/9.txt
+Delete created directory recursively
+####################################################

@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ldl-php/ldl-framework-base.git",
-                "reference": "838e996d6cfe47ef404c2666d2e75c41e7e4e895"
+                "reference": "9445d5119e51102a8cbf1a8f5595b49f59880828"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ldl-php/ldl-framework-base/zipball/838e996d6cfe47ef404c2666d2e75c41e7e4e895",
-                "reference": "838e996d6cfe47ef404c2666d2e75c41e7e4e895",
+                "url": "https://api.github.com/repos/ldl-php/ldl-framework-base/zipball/9445d5119e51102a8cbf1a8f5595b49f59880828",
+                "reference": "9445d5119e51102a8cbf1a8f5595b49f59880828",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 "issues": "https://github.com/ldl-php/ldl-framework-base/issues",
                 "source": "https://github.com/ldl-php/ldl-framework-base/tree/master"
             },
-            "time": "2021-12-03T14:38:19+00:00"
+            "time": "2021-12-08T16:11:46+00:00"
         },
         {
             "name": "ldl-framework/typed-collection",
