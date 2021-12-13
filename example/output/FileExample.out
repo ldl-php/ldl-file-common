@@ -1,5 +1,8 @@
 Create a new File instance, first argument is this very same script file:
 
+Get file extension ...
+
+"php"
 Print lines from the file as a string:
 
 <?php declare(strict_types=1);
@@ -16,6 +19,9 @@ use LDL\File\File;
 
 echo "Create a new File instance, first argument is this very same script file:\n\n";
 $file = new File(__FILE__);
+
+echo "Get file extension ...\n\n";
+dump($file->getExtension());
 
 echo "Print lines from the file as a string:\n\n";
 echo $file->getLinesAsString();
@@ -36,7 +42,7 @@ Call File::getLines, must return a StringCollection
 
 Print amount of lines:
 
-30
+33
 Implode lines using '>> ' as separator:
 
 <?php declare(strict_types=1);
@@ -53,6 +59,9 @@ Implode lines using '>> ' as separator:
 >>
 >> echo "Create a new File instance, first argument is this very same script file:\n\n";
 >> $file = new File(__FILE__);
+>>
+>> echo "Get file extension ...\n\n";
+>> dump($file->getExtension());
 >>
 >> echo "Print lines from the file as a string:\n\n";
 >> echo $file->getLinesAsString();
@@ -87,6 +96,9 @@ use LDL\File\File;
 
 echo "Create a new File instance, first argument is this very same script file:\n\n";
 $file = new File(__FILE__);
+
+echo "Get file extension ...\n\n";
+dump($file->getExtension());
 
 echo "Print lines from the file as a string:\n\n";
 echo $file->getLinesAsString();
