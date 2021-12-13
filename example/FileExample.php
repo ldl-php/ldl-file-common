@@ -13,6 +13,9 @@ use LDL\File\File;
 echo "Create a new File instance, first argument is this very same script file:\n\n";
 $file = new File(__FILE__);
 
+echo "Get file extension ...\n\n";
+dump($file->getExtension());
+
 echo "Print lines from the file as a string:\n\n";
 echo $file->getLinesAsString();
 

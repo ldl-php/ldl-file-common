@@ -57,6 +57,7 @@ final class File implements FileInterface
         }
     }
 
+    //<editor-fold desc="FileInterface methods">
     public function delete() : FileInterface
     {
         FileHelper::delete($this->toString());
@@ -195,6 +196,16 @@ final class File implements FileInterface
         return $this->path;
     }
 
+    public function getExtension(): string
+    {
+        if(!preg_match('#\.[a-zA-Z]#', $this->path)){
+            return '';
+        }
+        return mb_substr($this->path, mb_strrpos($this->path,'.')+1);
+    }
+
+    //</editor-fold>
+
     //<editor-fold desc="ToStringInterface methods">
     public function toString(): string
     {
@@ -208,7 +219,6 @@ final class File implements FileInterface
     //</editor-fold>
 
     //<editor-fold desc="Private methods">
-
     /**
      * @param string $operation
      * @throws FileExistsException

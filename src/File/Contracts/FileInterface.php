@@ -20,6 +20,12 @@ interface FileInterface extends ToStringInterface, ReadFileLinesInterface
     public function getPath() : string;
 
     /**
+     * Returns file extension
+     * @return string
+     */
+    public function getExtension() : string;
+
+    /**
      * Obtains the directory where this file is located
      *
      * @param int|null $levels
