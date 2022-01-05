@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace LDL\File\Helper;
 
+use LDL\File\Contracts\FileTreeInterface;
 use LDL\File\Directory;
+use LDL\File\Exception\FileException;
 use LDL\File\Exception\FileExistsException;
-use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileReadException;
+use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
 use LDL\File\File;
 use LDL\File\FileTree;
@@ -13,20 +17,16 @@ use LDL\File\FileTree;
 final class DirectoryHelper
 {
     /**
-     * @param string $path
-     * @param int $mode
-     * @return Directory
      * @throws FileExistsException
      * @throws FileWriteException
-     * @throws FileTypeException
      */
-    public static function create(string $path, int $mode) : Directory
+    public static function create(string $path, int $mode): Directory
     {
-        if(is_dir($path)){
+        if (is_dir($path)) {
             throw new FileExistsException("Directory \"$path\" already exists!");
         }
 
-        if(!@mkdir($path, $mode) && !is_dir($path)){
+        if (!@mkdir($path, $mode) && !is_dir($path)) {
             throw new FileWriteException("Unable to create directory: $path");
         }
 
@@ -36,93 +36,156 @@ final class DirectoryHelper
     /**
      * Given a directory path, it will check if its empty or not.
      * If the directory path is not empty, delete all files including hidden files.
-     * if the directory path is empty, delete the directory
+     * if the directory path is empty, delete the directory.
      *
      * @author Ohiare Nathaniel
      *
-     * @param string $dir
-     * @return bool
      * @throws FileTypeException
      * @throws FileReadException
      * @throws FileWriteException
+     * @throws FileExistsException
      */
-    public static function delete(string $dir) : bool
+    public static function delete(string $dir): void
     {
-        if(!is_dir($dir)){
+        if (!is_dir($dir)) {
             throw new FileTypeException("Given path \"$dir\" is not a directory!");
         }
 
-        if(!is_writable($dir)){
+        if (!is_writable($dir)) {
             throw new FileWriteException("Directory \"$dir\" is not writable!");
         }
 
         $files = scandir($dir);
 
-        foreach($files as $file){
-            if('.' === $file || '..' === $file){
+        foreach ($files as $file) {
+            if ('.' === $file || '..' === $file) {
                 continue;
             }
 
             $file = sprintf('%s%s%s', $dir, \DIRECTORY_SEPARATOR, $file);
 
-            is_dir($file) ? self::delete($file) : unlink($file);
+            is_dir($file) ? self::delete($file) : FileHelper::delete($file);
         }
 
-        return rmdir($dir);
-    }
-
-    public static function copy(string $source, string $dest) : Directory
-    {
-        throw new \LogicException('@TODO Copy directory recursively');
+        rmdir($dir);
     }
 
     /**
-     * Obtains a FileTree
-     *
-     * @param string $path
-     * @return FileTree
      * @throws FileExistsException
      * @throws FileReadException
      * @throws FileTypeException
+     * @throws FileWriteException
      */
-    public static function getTree(string $path) : FileTree
+    public static function copy(string $source, string $dest, bool $force = false): Directory
+    {
+        $perms = fileperms($source);
+
+        if (!is_dir($source)) {
+            throw new FileTypeException("Source $source is not a directory");
+        }
+
+        if (!is_readable($source)) {
+            throw new FileReadException("Could not read source directory $source");
+        }
+
+        $exists = file_exists($dest);
+
+        if (!$force && $exists) {
+            throw new FileExistsException("Destination $dest already exists");
+        }
+
+        if ($force && $exists && is_dir($dest)) {
+            self::delete($dest);
+        }
+
+        if ($force && $exists && is_file($dest)) {
+            FileHelper::delete($dest);
+        }
+
+        if (!mkdir($dest, $perms) && !is_dir($dest)) {
+            throw new FileWriteException(sprintf('Could not create directory "%s"', $dest));
+        }
+
+        $files = scandir($source);
+
+        foreach ($files as $file) {
+            if ('.' === $file || '..' === $file) {
+                continue;
+            }
+
+            $fileSource = sprintf('%s%s%s', $source, \DIRECTORY_SEPARATOR, $file);
+            $fileDest = sprintf('%s%s%s', $dest, \DIRECTORY_SEPARATOR, $file);
+
+            try {
+                is_dir($fileSource) ? self::copy($fileSource, $fileDest) : FileHelper::copy($fileSource, $fileDest);
+            } catch (FileException $e) {
+            }
+        }
+
+        return new Directory($dest);
+    }
+
+    /**
+     * @throws FileExistsException
+     * @throws FileReadException
+     * @throws FileTypeException
+     * @throws FileWriteException
+     */
+    public static function move(string $source, string $dest, bool $force = false): Directory
+    {
+        $dir = self::copy($source, $dest, $force);
+
+        try {
+            self::delete($source);
+        } catch (FileException $e) {
+            self::delete($dest);
+            throw new FileWriteException("Could not remove source directory: $source", $e->getCode(), $e);
+        }
+
+        return $dir;
+    }
+
+    /**
+     * Obtains a FileTree.
+     *
+     * @throws FileReadException
+     * @throws FileTypeException
+     */
+    public static function getTree(string $path): FileTreeInterface
     {
         $dir = new Directory($path);
 
-        if(!$dir->isReadable()){
+        if (!$dir->isReadable()) {
             throw new FileReadException("Directory \"$path\" is not readable!");
         }
 
-        $tree = new FileTree($dir);
+        $files = [];
 
-        foreach(scandir($path) as $file){
-            if('.' === $file || '..' === $file){
+        foreach (scandir($path) as $file) {
+            if ('.' === $file || '..' === $file) {
                 continue;
             }
-            $file = FilePathHelper::createAbsolutePath($dir->toString(), $file);
-            $tree->append(!is_file($file) ? new Directory($file) : new File($file));
+            $files[] = FilePathHelper::createAbsolutePath($dir->toString(), $file);
         }
 
-        return $tree;
+        return new FileTree($dir, $files);
     }
 
     /**
-     * @param string $path
-     * @return iterable
      * @throws FileExistsException
      * @throws FileReadException
      * @throws FileTypeException
      */
-    public static function iterateTree(string $path) : iterable
+    public static function iterateTree(string $path): iterable
     {
         $dir = new Directory($path);
 
-        if(!$dir->isReadable()){
+        if (!$dir->isReadable()) {
             throw new FileReadException("Directory $dir is not readable!");
         }
 
-        foreach(scandir($path) as $file){
-            if('.' === $file || '..' === $file){
+        foreach (scandir($path) as $file) {
+            if ('.' === $file || '..' === $file) {
                 continue;
             }
             $file = FilePathHelper::createAbsolutePath($dir->toString(), $file);

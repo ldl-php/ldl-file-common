@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace LDL\File\Contracts;
 
@@ -8,13 +10,16 @@ interface ReadFileLinesInterface
 {
     /**
      * @throws \Exception
-     * @return StringCollection
      */
-    public function getLines() : StringCollection;
+    public function getLines(): StringCollection;
+
+    /**
+     * Returns lines from the file as a PHP string.
+     */
+    public function getLinesAsString(string $separator): string;
 
     /**
      * @throws \Exception
-     * @return iterable
      */
-    public function iterateLines() : iterable;
+    public function iterateLines(): iterable;
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace LDL\File\Collection;
 
@@ -11,6 +13,7 @@ use LDL\File\File;
 use LDL\Framework\Helper\IterableHelper;
 use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
+use LDL\Validators\Chain\OrValidatorChain;
 use LDL\Validators\InterfaceComplianceValidator;
 
 final class FileCollection extends AbstractTypedCollection implements FileCollectionInterface
@@ -21,7 +24,7 @@ final class FileCollection extends AbstractTypedCollection implements FileCollec
 
     public function __construct(iterable $items = null)
     {
-        $this->getAppendValueValidatorChain()
+        $this->getAppendValueValidatorChain(OrValidatorChain::class)
             ->getChainItems()
             ->appendMany([
                 new InterfaceComplianceValidator(FileInterface::class),
@@ -32,43 +35,37 @@ final class FileCollection extends AbstractTypedCollection implements FileCollec
     }
 
     /**
-     * Filters hidden files (files which start with a .)
-     *
-     * @return FileCollection
+     * Filters hidden files (files which start with a .).
      */
-    public function filterHiddenFiles() : FileCollection
+    public function filterHiddenFiles(): FileCollection
     {
         /**
          * @var FileCollection $return
          */
-        $return =$this->filter(
-        static function(File $f){
-            return strpos($f->getFilename(), '.') === 0;
+        $return = $this->filter(
+        static function (File $f) {
+            return 0 === strpos($f->getFilename(), '.');
         });
 
         return $return;
     }
 
     /**
-     * @param string $extension
-     * @return FileCollection
      * @throws \LDL\File\Exception\FileExistsException
      * @throws \LDL\File\Exception\FileTypeException
      */
-    public function filterByExtension(string $extension) : FileCollection
+    public function filterByExtension(string $extension): FileCollection
     {
         return $this->filterByExtensions([$extension]);
     }
 
     /**
-     * Filters files which contain a certain extension
+     * Filters files which contain a certain extension.
      *
-     * @param iterable $extensions
-     * @return FileCollection
      * @throws \LDL\File\Exception\FileExistsException
      * @throws \LDL\File\Exception\FileTypeException
      */
-    public function filterByExtensions(iterable $extensions) : FileCollection
+    public function filterByExtensions(iterable $extensions): FileCollection
     {
         $extensions = IterableHelper::toArray($extensions);
 
@@ -77,8 +74,8 @@ final class FileCollection extends AbstractTypedCollection implements FileCollec
         /**
          * @var File $file
          */
-        foreach($this as $file){
-            if(in_array($file->getExtension(), $extensions, true)){
+        foreach ($this as $file) {
+            if (in_array($file->getExtension(), $extensions, true)) {
                 $return->append($file);
             }
         }
@@ -87,33 +84,29 @@ final class FileCollection extends AbstractTypedCollection implements FileCollec
     }
 
     /**
-     * Filters files which correspond to a file type
+     * Filters files which correspond to a file type.
      *
      * @see FileTypeConstants for available types
      *
-     * @param string $type
-     * @return FileCollection
      * @throws \LDL\File\Exception\FileExistsException
      * @throws \LDL\File\Exception\FileTypeException
      * @throws \LDL\File\Exception\FileReadException
      */
-    public function filterByFileType(string $type) : FileCollection
+    public function filterByFileType(string $type): FileCollection
     {
         return $this->filterByFileTypes([$type]);
     }
 
     /**
-     * Filters current file collection by file types
+     * Filters current file collection by file types.
      *
      * @see FileTypeConstants for available types
      *
-     * @param iterable $types
-     * @return FileCollection
      * @throws \LDL\File\Exception\FileExistsException
      * @throws \LDL\File\Exception\FileTypeException
      * @throws \LDL\File\Exception\FileReadException
      */
-    public function filterByFileTypes(iterable $types) : FileCollection
+    public function filterByFileTypes(iterable $types): FileCollection
     {
         $types = IterableHelper::toArray($types);
 
@@ -122,13 +115,12 @@ final class FileCollection extends AbstractTypedCollection implements FileCollec
         /**
          * @var File $file
          */
-        foreach($this as $file){
-            if(in_array($file->getType(), $types, true)){
+        foreach ($this as $file) {
+            if (in_array($file->getType(), $types, true)) {
                 $filtered->append($file);
             }
         }
 
         return $filtered;
     }
-
 }

@@ -1,18 +1,25 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace LDL\File;
 
 use LDL\File\Contracts\DirectoryInterface;
 use LDL\File\Contracts\FileInterface;
+use LDL\File\Contracts\FileTreeInterface;
+use LDL\File\Contracts\LDLFileInterface;
+use LDL\File\Contracts\LinkInterface;
 use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
 use LDL\File\Helper\FileHelper;
 use LDL\File\Helper\FilePermsHelper;
+use LDL\File\Traits\ObserveTreeTrait;
 use LDL\Type\Collection\Types\String\StringCollection;
 
 final class File implements FileInterface
 {
+    use ObserveTreeTrait;
 
     /**
      * @var string
@@ -28,63 +35,37 @@ final class File implements FileInterface
      * When calling from the constructor, the file must always exist, if the file is to be created
      * the self::create method must be called.
      *
-     * @param string $file
      * @throws FileExistsException
      * @throws FileTypeException
      */
-    public function __construct(string $file)
-    {
-        $this->path = realpath($file);
+    public function __construct(
+        string $file,
+        FileTreeInterface $tree = null
+    ) {
+        $this->path = is_link($file) ? $file : realpath($file);
 
-        if(!$this->path){
-            throw new FileExistsException(
-                sprintf(
-                    'File %s does not exists, if you want to create it please use: %s::%s',
-                    $file,
-                    __CLASS__,
-                    'create'
-                )
-            );
+        if (!$this->path) {
+            throw new FileExistsException(sprintf('File %s does not exists, if you want to create it please use: %s::%s', $file, __CLASS__, 'create'));
         }
 
-        if(is_dir($this->path)){
-            throw new FileTypeException(
-                sprintf(
-                    'Invalid file type provided, expected file, got directory: "%s"',
-                    $file
-                )
-            );
+        if (is_dir($this->path)) {
+            throw new FileTypeException(sprintf('Invalid file type provided, expected file, got directory: "%s"', $file));
         }
-    }
 
-    //<editor-fold desc="FileInterface methods">
-    public function delete() : FileInterface
-    {
-        FileHelper::delete($this->toString());
-        $this->isDeleted = true;
-        return $this;
-    }
-
-    public function getType() : string
-    {
-        return FileHelper::getType((string)$this);
+        $this->_tObserveTreeTrait = $tree;
     }
 
     public static function create(
         string $file,
-        ?string $contents,
-        ?int $permissions,
-        ?bool $overwrite=false
-    ) : FileInterface
-    {
-        $permissions = $permissions ?? 0644;
-        $contents = $contents ?? '';
-
-        if(false === $overwrite && file_exists($file)){
+        string $contents = '',
+        int $permissions = 0644,
+        bool $overwrite = false
+    ): FileInterface {
+        if (false === $overwrite && file_exists($file)) {
             throw new FileExistsException("File \"$file\" already exists!");
         }
 
-        if(false === file_put_contents($file, $contents)){
+        if (false === file_put_contents($file, $contents)) {
             throw new FileWriteException("Failed to create file: $file");
         }
 
@@ -92,38 +73,50 @@ final class File implements FileInterface
             ->chmod($permissions);
     }
 
-    public function move(DirectoryInterface $to) : FileInterface
+    //<editor-fold desc="FileInterface methods">
+    public function delete(): void
     {
-        throw new \RuntimeException('@TODO move file to directory');
+        $this->checkIfDeleted(__METHOD__);
+        $this->_tObserveTreeTraitRefreshTree();
+        FileHelper::delete($this->toString());
+        $this->isDeleted = true;
     }
 
-    public function rename(string $name): FileInterface
+    public function getType(): string
     {
-        throw new \RuntimeException('@TODO rename file');
+        return FileHelper::getType((string) $this);
     }
 
-    public function chmod(int $permissions) : FileInterface
+    public function move(string $dest, bool $overwrite = false): LDLFileInterface
+    {
+        return FileHelper::move($this->path, $dest, $overwrite);
+    }
+
+    public function chmod(int $permissions): LDLFileInterface
     {
         $this->checkIfDeleted(__METHOD__);
         FilePermsHelper::chmod($this->toString(), $permissions);
+
         return $this;
     }
 
-    public function getPerms() : int
+    public function getPerms(): int
     {
         return FilePermsHelper::getPerms($this->toString());
     }
 
-    public function getLines() : StringCollection
+    public function getLines(): StringCollection
     {
         $this->checkIfDeleted(__METHOD__);
+
         return FileHelper::getLines($this->toString());
     }
-    
-    public function getLinesAsString() : string
+
+    public function getLinesAsString(string $separator = ''): string
     {
         $this->checkIfDeleted(__METHOD__);
-        return FileHelper::getLinesAsString($this->toString());
+
+        return FileHelper::getLinesAsString($this->toString(), $separator);
     }
 
     public function iterateLines(): iterable
@@ -132,51 +125,59 @@ final class File implements FileInterface
         yield from FileHelper::iterateLines($this->toString());
     }
 
-    public function put(string $contents, string $newName=null) : FileInterface
+    public function put(string $contents, string $newName = null): FileInterface
     {
         $file = trim($newName ?? $this->toString());
 
-        if(!is_writable($file)){
+        if (!is_writable($file)) {
             throw new FileWriteException("File \"$file\" is not writable");
         }
 
-        if('' === $file){
+        if ('' === $file) {
             throw new \InvalidArgumentException('File name can not be empty');
         }
 
-        if(false === file_put_contents($file, $contents)){
+        if (false === file_put_contents($file, $contents)) {
             throw new FileWriteException("Failed to write to file: {$this->path}");
         }
 
         return new self($file);
     }
 
-    public function append(string $content) : FileInterface
+    public function append(string $content): FileInterface
     {
         $this->checkIfDeleted(__METHOD__);
 
-        if(!is_writable($this->toString())){
+        if (!is_writable($this->toString())) {
             throw new FileWriteException("File \"$this\" is not writable");
         }
 
         file_put_contents($this->toString(), $content, \FILE_APPEND);
+
         return $this;
     }
 
-    public function copy(string $dest, bool $overwrite) : FileInterface
+    public function link(string $dest, bool $force = false): LinkInterface
+    {
+        return Link::create($this->path, $dest, $force);
+    }
+
+    public function copy(string $dest, bool $overwrite): LDLFileInterface
     {
         FileHelper::copy($this->toString(), $dest, $overwrite);
+
         return new self($dest);
     }
 
-    public function getDirectory(int $levels=null) : DirectoryInterface
+    public function getDirectory(int $levels = null): DirectoryInterface
     {
         $levels = $levels ?? 1;
         $this->checkIfDeleted(__METHOD__);
+
         return new Directory(dirname($this->path, $levels));
     }
 
-    public function isDeleted() : bool
+    public function isDeleted(): bool
     {
         return $this->isDeleted;
     }
@@ -198,10 +199,11 @@ final class File implements FileInterface
 
     public function getExtension(): string
     {
-        if(!preg_match('#\.[a-zA-Z]#', $this->path)){
+        if (!preg_match('#\.[a-zA-Z]#', $this->path)) {
             return '';
         }
-        return mb_substr($this->path, mb_strrpos($this->path,'.')+1);
+
+        return mb_substr($this->path, mb_strrpos($this->path, '.') + 1);
     }
 
     //</editor-fold>
@@ -220,12 +222,11 @@ final class File implements FileInterface
 
     //<editor-fold desc="Private methods">
     /**
-     * @param string $operation
      * @throws FileExistsException
      */
-    private function checkIfDeleted(string $operation) : void
+    private function checkIfDeleted(string $operation): void
     {
-        if(!$this->isDeleted){
+        if (!$this->isDeleted) {
             return;
         }
 

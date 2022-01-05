@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace LDL\File\Collection;
 
@@ -7,14 +9,13 @@ use LDL\File\Collection\Traits\AppendFileAsStringTrait;
 use LDL\File\Collection\Traits\FileCollectionFactoryTrait;
 use LDL\File\Collection\Traits\ReadFileLinesInterfaceTrait;
 use LDL\File\Contracts\FileInterface;
-use LDL\File\Contracts\ReadFileLinesInterface;
 use LDL\File\Validator\JsonFileValidator;
 use LDL\File\Validator\ReadableFileValidator;
 use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
 use LDL\Validators\InterfaceComplianceValidator;
 
-final class JsonFileCollection extends AbstractTypedCollection implements FileCollectionInterface, ReadFileLinesInterface
+final class JsonFileCollection extends AbstractTypedCollection implements FileCollectionInterface
 {
     use AppendValueValidatorChainTrait;
     use AppendFileAsStringTrait;
@@ -28,7 +29,7 @@ final class JsonFileCollection extends AbstractTypedCollection implements FileCo
             ->appendMany([
                 new InterfaceComplianceValidator(FileInterface::class),
                 new ReadableFileValidator(),
-                new JsonFileValidator()
+                new JsonFileValidator(),
             ])
             ->lock();
 

@@ -1,75 +1,47 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * In this example:.
+ *
+ * 1) Generate random files and directories
+ * 2) Obtain tree from temporary directory where files were generated
+ * 3) Set random permissions (Writable and NON-Writable perms) on each file / directory
+ * 4) Create a new WritableFileCollection by filtering files in tree and then filtering for writable only files
+ * 5) Print each writable file
+ * 6) Fix all permissions in the tree so all files can be deleted correctly
+ * 7) Delete testing directory
+ */
 
 use LDL\File\Collection\WritableFileCollection;
-use LDL\File\Validator\Exception\WritableFileValidatorException;
-use LDL\Validators\Chain\Dumper\ValidatorChainExprDumper;
-use LDL\Validators\Chain\Dumper\ValidatorChainHumanDumper;
 
 require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/lib/example-helper.php';
 
-echo sprintf(
-    'Create "%s" instance%s',
-    WritableFileCollection::class,
-    "\n\n"
-);
+$tmpDir = createTestFiles();
+randomizePermissions($tmpDir);
 
-$wfc = new WritableFileCollection();
+$tree = $tmpDir->getTree();
 
-echo "Check validators\n";
-dump(ValidatorChainExprDumper::dump($wfc->getAppendValueValidatorChain()));
-dump(ValidatorChainHumanDumper::dump($wfc->getAppendValueValidatorChain()));
+$rfc = new WritableFileCollection($tree->filterWritable()->filterFiles());
 
-$tmpDir = sprintf('%s%s%s',sys_get_temp_dir(), \DIRECTORY_SEPARATOR, 'ldl_fs_example');
+echo "\nPrint files which are writable: \n\n";
 
-if(is_dir($tmpDir)){
-    $files = glob("$tmpDir/*");
-
-    foreach($files as $file){
-        if(is_file($file)) unlink($file);
-    }
-
-    rmdir($tmpDir);
+foreach ($rfc as $writable) {
+    echo "$writable\n";
 }
 
-if (!mkdir($tmpDir, 0755) && !is_dir($tmpDir)) {
-    throw new \RuntimeException(sprintf('Directory "%s" was not created', $tmpDir));
+echo "\nAttempt to append entire file tree (which contains writable and non-writable files) EXCEPTION must be thrown\n\n";
+
+try {
+    $rfc->appendMany($tree->filterFiles());
+} catch (\Exception $e) {
+    echo "OK EXCEPTION: {$e->getMessage()}";
 }
 
-$permissions = [
-    0222, //Writable permission
-    0444 //Readable permission
-];
-
-for($i = 0; $i < 10; $i++){
-    shuffle($permissions);
-    $permission = $permissions[0];
-    $file = sprintf('%s%s%s.txt', $tmpDir, \DIRECTORY_SEPARATOR, $i);
-
-    echo sprintf('Creating file "%s" with permissions "%s"%s', $file, $permission, "\n");
-
-    file_put_contents($file, 'test');
-    chmod($file, $permission);
-
-    try {
-
-        if(0444 === $permission){
-            echo "Exception must be thrown\n";
-        }
-
-        $wfc->append($file);
-
-    }catch(WritableFileValidatorException $e){
-        echo "EXCEPTION: {$e->getMessage()}\n";
-    }
-}
-
-echo "\nClean up generated files ...\n";
-$files = glob("$tmpDir/*");
-
-foreach($files as $file){
-    if(is_file($file)) unlink($file);
-}
-
-rmdir($tmpDir);
-
-echo "Done\n";
+/*
+ * Fix all permissions so everything can be deleted
+ */
+$tmpDir->chmod(0755, true);
+$tmpDir->delete();

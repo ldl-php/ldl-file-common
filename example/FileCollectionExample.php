@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * This example creates random files and directories with nested directories inside of them,
@@ -30,13 +32,15 @@ $fromIterable = FileCollection::fromIterable($files);
 
 echo "Print files:\n";
 
-foreach($fromIterable as $file){
-
+foreach ($fromIterable as $file) {
     echo "File $file\n";
-
 }
 
 echo "Delete created directory recursively\n";
 echo "####################################################\n";
 
 $tempDir->delete();
+
+foreach ($tree as $path => $file) {
+    echo "$path\n";
+}

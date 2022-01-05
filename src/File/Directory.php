@@ -1,19 +1,28 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace LDL\File;
 
 use LDL\File\Constants\FileTypeConstants;
 use LDL\File\Contracts\DirectoryInterface;
 use LDL\File\Contracts\FileInterface;
+use LDL\File\Contracts\FileTreeInterface;
+use LDL\File\Contracts\LDLFileInterface;
+use LDL\File\Contracts\LinkInterface;
 use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
 use LDL\File\Helper\DirectoryHelper;
 use LDL\File\Helper\FilePathHelper;
 use LDL\File\Helper\FilePermsHelper;
+use LDL\File\Helper\LinkHelper;
+use LDL\File\Traits\ObserveTreeTrait;
 
 final class Directory implements DirectoryInterface
 {
+    use ObserveTreeTrait;
+
     /**
      * @var string
      */
@@ -22,84 +31,60 @@ final class Directory implements DirectoryInterface
     /**
      * @var bool
      */
-    private $isDeleted=false;
+    private $isDeleted = false;
 
     /**
      * Directory constructor.
-     * @param string $path
+     *
      * @throws FileTypeException
      */
-    public function __construct(string $path)
+    public function __construct(string $path, FileTreeInterface $tree = null)
     {
-
-        if(is_dir($path)){
+        if (is_dir($path)) {
             $this->path = $path;
+
             return;
         }
 
-        throw new FileTypeException(
-            sprintf(
-                'File %s does not exists or is not a directory, if you wish to create it, use %s::create',
-                $path,
-                __CLASS__
-            )
-        );
+        $this->_tObserveTreeTrait = $tree;
+
+        throw new FileTypeException(sprintf('File %s does not exists or is not a directory, if you wish to create it, use %s::create', $path, __CLASS__));
     }
 
-    public function getType() : string
+    public function getDirectory(int $levels = null): DirectoryInterface
+    {
+        $levels = $levels ?? 1;
+        $this->checkIfDeleted(__METHOD__);
+
+        return new Directory(dirname($this->path, $levels), $this->_tObserveTreeTrait);
+    }
+
+    public static function create(string $path, int $permissions = 0755): DirectoryInterface
+    {
+        return DirectoryHelper::create($path, $permissions);
+    }
+
+    public function getType(): string
     {
         return FileTypeConstants::FILE_TYPE_DIRECTORY;
     }
 
-    public function rename(string $name): DirectoryInterface
+    public function mkdir(string $path, int $permissions = 0755): DirectoryInterface
     {
-        throw new \RuntimeException('@TODO Rename directory');
-    }
-
-    public function isReadable() : bool
-    {
-        return is_readable($this->path);
-    }
-
-    public function isWritable() : bool
-    {
-        return is_writable($this->path);
-    }
-
-    public static function create(string $path, int $permissions=0755) : DirectoryInterface
-    {
-        return DirectoryHelper::create($path, $permissions);
-    }
-
-    /**
-     * Creates a directory inside of the current directory
-     *
-     * @param string $path
-     * @param int $permissions
-     * @return Directory
-     * @throws FileExistsException
-     * @throws FileWriteException
-     * @throws FileTypeException
-     */
-    public function mkdir(string $path, int $permissions=0755) : DirectoryInterface
-    {
-        if(!$this->isWritable()){
+        if (!$this->isWritable()) {
             throw new FileWriteException("Directory {$this->path} is not writable!");
         }
 
         $path = FilePathHelper::createAbsolutePath($this->path, $path);
+
         return DirectoryHelper::create($path, $permissions);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function mkfile(
         string $name,
-        string $contents=null,
-        int $permissions=0644
-    ) : FileInterface
-    {
+        string $contents = '',
+        int $permissions = 0644
+    ): FileInterface {
         $name = basename($name);
 
         return File::create(
@@ -110,75 +95,71 @@ final class Directory implements DirectoryInterface
     }
 
     /**
+     * @TODO Needs improvement, this should not re-scan all files the instance of _tObserveTreeTrait should remain
+     * for maximum performance.
      * {@inheritdoc}
      */
-    public function getTree() : FileTree
+    public function getTree(bool $observable = true): FileTreeInterface
     {
-        $this->checkIfDeleted(__METHOD__);
-        return DirectoryHelper::getTree($this->path);
+        $this->_tObserveTreeTrait = DirectoryHelper::getTree($this->path, $observable);
+
+        return $this->_tObserveTreeTrait;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function iterateTree() : iterable
+    public function delete(): void
     {
         $this->checkIfDeleted(__METHOD__);
-        yield from DirectoryHelper::iterateTree($this->toString());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function delete() : DirectoryInterface
-    {
-        $this->checkIfDeleted(__METHOD__);
-
         DirectoryHelper::delete($this->path);
+        $this->_tObserveTreeTraitRefreshTree();
         $this->isDeleted = true;
-        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function chmod(int $permissions) : DirectoryInterface
+    public function chmod(int $permissions, bool $recursive = false): LDLFileInterface
     {
         $this->checkIfDeleted(__METHOD__);
 
-        FilePermsHelper::chmod($this->path, $permissions);
+        FilePermsHelper::chmod($this->path, $permissions, $recursive);
+
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPerms() : int
+    public function isReadable(): bool
     {
+        return is_readable($this->path);
+    }
+
+    public function isWritable(): bool
+    {
+        return is_writable($this->path);
+    }
+
+    public function getPerms(): int
+    {
+        $this->checkIfDeleted(__METHOD__);
+
         return FilePermsHelper::getPerms($this->toString());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function copy(string $dest) : DirectoryInterface
+    public function copy(string $dest, bool $force = false): LDLFileInterface
     {
         $this->checkIfDeleted(__METHOD__);
-        return DirectoryHelper::copy($this->toString(), $dest);
+
+        return DirectoryHelper::copy($this->toString(), $dest, $force);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function move(): DirectoryInterface
+    public function move(string $dest, bool $force = false): LDLFileInterface
     {
-        throw new \LogicException('@TODO');
+        $this->checkIfDeleted(__METHOD__);
+        $return = DirectoryHelper::move($this->path, $dest, $force);
+        $this->isDeleted = true;
+
+        return $return;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDeleted() : bool
+    public function isDeleted(): bool
     {
         return $this->isDeleted;
     }
@@ -186,6 +167,16 @@ final class Directory implements DirectoryInterface
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    public function link(string $target, bool $force = false): LinkInterface
+    {
+        return LinkHelper::create($this->path, $target, $force);
+    }
+
+    public function getLinkTarget(): DirectoryInterface
+    {
+        return LinkHelper::getTarget($this->path);
     }
 
     //<editor-fold desc="ToStringInterface Methods">
@@ -202,12 +193,11 @@ final class Directory implements DirectoryInterface
 
     //<editor-fold desc="Private methods">
     /**
-     * @param string $operation
      * @throws FileExistsException
      */
-    private function checkIfDeleted(string $operation) : void
+    private function checkIfDeleted(string $operation): void
     {
-        if(!$this->isDeleted){
+        if (!$this->isDeleted) {
             return;
         }
 
@@ -216,5 +206,4 @@ final class Directory implements DirectoryInterface
         throw new FileExistsException($msg);
     }
     //</editor-fold>
-
 }
