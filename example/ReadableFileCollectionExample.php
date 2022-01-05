@@ -1,7 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
- * In this example:
+ * In this example:.
  *
  * 1) Generate random files and directories
  * 2) Obtain tree from temporary directory where files were generated
@@ -18,38 +20,28 @@ require __DIR__.'/../vendor/autoload.php';
 require __DIR__.'/lib/example-helper.php';
 
 $tmpDir = createTestFiles();
+randomizePermissions($tmpDir);
 
 $tree = $tmpDir->getTree();
-
-/**
- * Assign readable and non readable permissions
- */
-foreach($tree as $i => $file){
-    $permission = ($i % 2) ? 0444 : 0000;
-    $file->chmod($permission);
-
-    echo sprintf('Set file %s as %s', $file, 0444 === $permission ? "readable\n" : "not readable\n");
-}
 
 $rfc = new ReadableFileCollection($tree->filterReadable()->filterFiles());
 
 echo "\nPrint files which are readable: \n\n";
 
-foreach($rfc as $readable){
+foreach ($rfc as $readable) {
     echo "$readable\n";
 }
 
 echo "\nAttempt to append entire file tree (which contains readable and non-readable files) EXCEPTION must be thrown\n\n";
 
-try{
+try {
     $rfc->appendMany($tree->filterFiles());
-}catch(\Exception $e){
+} catch (\Exception $e) {
     echo "OK EXCEPTION: {$e->getMessage()}";
 }
 
-/**
+/*
  * Fix all permissions so everything can be deleted
  */
-$tree->chmod(0755);
-
-deleteTestDir();
+$tmpDir->chmod(0755, true);
+$tmpDir->delete();

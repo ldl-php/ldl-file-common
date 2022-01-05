@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 use LDL\File\Collection\JsonFileCollection;
 use LDL\File\Validator\Exception\JsonFileDecodeException;
@@ -25,10 +27,10 @@ dump(ValidatorChainHumanDumper::dump($jsonCollection->getAppendValueValidatorCha
 
 $json = [
     'name' => 'name',
-    'lastname' => 'lastname'
+    'lastname' => 'lastname',
 ];
 
-$jsonFile = $tmpDir->mkfile('test.json', json_encode($json,\JSON_THROW_ON_ERROR));
+$jsonFile = $tmpDir->mkfile('test.json', json_encode($json, \JSON_THROW_ON_ERROR));
 
 echo "Append JSON file to the collection (no exception must be thrown) ...\n";
 
@@ -37,16 +39,10 @@ $jsonCollection->append($jsonFile);
 echo "OK!\n";
 
 try {
-
     echo "Append regular file to the collection, EXCEPTION must be thrown\n";
     $jsonCollection->append(__FILE__);
-
-}catch(JsonFileDecodeException $e) {
-
-    echo "EXCEPTION: {$e->getMessage()}\n";
-
+} catch (JsonFileDecodeException $e) {
+    echo "OK! EXCEPTION: {$e->getMessage()}\n";
 }
 
-echo "\nClean up generated files ...\n";
-
-deleteTestDir();
+$tmpDir->delete();

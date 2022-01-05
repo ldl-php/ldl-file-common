@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace LDL\File\Collection;
 
-use LDL\File\Collection\Contracts\FileCollectionInterface;
+use LDL\File\Collection\Contracts\LinkCollectionInterface;
 use LDL\File\Collection\Traits\AppendFileAsStringTrait;
 use LDL\File\Collection\Traits\FileCollectionFactoryTrait;
-use LDL\File\Contracts\LDLFileInterface;
-use LDL\File\Validator\FileExistsValidator;
-use LDL\File\Validator\WritableFileValidator;
+use LDL\File\Contracts\LinkInterface;
 use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
 use LDL\Validators\InterfaceComplianceValidator;
 
-final class WritableFileCollection extends AbstractTypedCollection implements FileCollectionInterface
+final class LinkCollection extends AbstractTypedCollection implements LinkCollectionInterface
 {
     use AppendValueValidatorChainTrait;
     use AppendFileAsStringTrait;
@@ -25,9 +23,7 @@ final class WritableFileCollection extends AbstractTypedCollection implements Fi
         $this->getAppendValueValidatorChain()
             ->getChainItems()
             ->appendMany([
-                new InterfaceComplianceValidator(LDLFileInterface::class),
-                new FileExistsValidator(),
-                new WritableFileValidator(),
+                new InterfaceComplianceValidator(LinkInterface::class),
             ])
             ->lock();
 

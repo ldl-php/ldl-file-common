@@ -1,0 +1,37 @@
+Create test directory ...
+
+Create some random files in /tmp/ldl-file-common and append them to a Directory collection
+
+Traverse directory tree and pick a random nested directory ...
+
+/tmp/ldl-file-common/.hidden_11
+/tmp/ldl-file-common/.hidden_12
+/tmp/ldl-file-common/.hidden_13
+/tmp/ldl-file-common/.hidden_14
+/tmp/ldl-file-common/.hidden_15
+/tmp/ldl-file-common/0847f7a533fe24ce4d6b191ae4e653d9
+/tmp/ldl-file-common/1.txt
+/tmp/ldl-file-common/10/109
+/tmp/ldl-file-common/11f8fedf8d87b6088430274f5ef4ab12
+/tmp/ldl-file-common/2/101
+/tmp/ldl-file-common/3.txt
+/tmp/ldl-file-common/4/103
+/tmp/ldl-file-common/5.txt
+/tmp/ldl-file-common/6/105
+/tmp/ldl-file-common/614dd13888aff99bf8a2d66230cfc1ba
+/tmp/ldl-file-common/69006f1842d4e72f88f268fcd09bccf3
+/tmp/ldl-file-common/7.txt
+/tmp/ldl-file-common/774776ebba9ef27887aa4b6ef7962072
+/tmp/ldl-file-common/7fd26cdc649b19749c4dc704bf3aae6c
+/tmp/ldl-file-common/8/107
+/tmp/ldl-file-common/9.txt
+/tmp/ldl-file-common/a5d425db1382087ceb65d5b70c78e60f
+/tmp/ldl-file-common/b90fd5dc3e3cefeebcc9c3168fdb988b
+/tmp/ldl-file-common/c89c1112321606e345e903488d298e2d
+/tmp/ldl-file-common/f2b0e76a33960b96497be5d03eace653
+
+Got random nested directory /tmp/ldl-file-common/10/109
+
+Delete random nested directory
+
+Verify that the directory is not within the tree any more

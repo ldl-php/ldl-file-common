@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /**
  * A FileTree represents a mix of directories and files, a tree may have a root directory
@@ -7,247 +9,225 @@
 
 namespace LDL\File;
 
+use LDL\File\Collection\Contracts\DirectoryCollectionInterface;
+use LDL\File\Collection\Contracts\FileCollectionInterface;
+use LDL\File\Collection\Contracts\LinkCollectionInterface;
 use LDL\File\Collection\DirectoryCollection;
 use LDL\File\Collection\FileCollection;
+use LDL\File\Collection\LinkCollection;
 use LDL\File\Constants\FileTypeConstants;
 use LDL\File\Contracts\DirectoryInterface;
-use LDL\File\Contracts\FileInterface;
-use LDL\File\Exception\FileWriteException;
+use LDL\File\Contracts\FilePermissionsReadInterface;
+use LDL\File\Contracts\FileTreeInterface;
+use LDL\File\Contracts\LDLFileInterface;
+use LDL\File\Factory\FileFactory;
 use LDL\File\Helper\DirectoryHelper;
-use LDL\Framework\Base\Collection\Contracts\FilterByInterface;
-use LDL\Framework\Base\Collection\Traits\FilterByClassInterfaceTrait;
-use LDL\Framework\Base\Collection\Traits\FilterByInterfaceTrait;
+use LDL\File\Traits\ObserveTreeTrait;
+use LDL\Framework\Base\Collection\Contracts\CollectionInterface;
+use LDL\Framework\Base\Constants;
 use LDL\Framework\Helper\IterableHelper;
 use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
 use LDL\Validators\Chain\OrValidatorChain;
 use LDL\Validators\InterfaceComplianceValidator;
 
-final class FileTree extends AbstractTypedCollection implements FilterByInterface
+final class FileTree extends AbstractTypedCollection implements FileTreeInterface
 {
     use AppendValueValidatorChainTrait;
-    use FilterByInterfaceTrait;
+    use ObserveTreeTrait;
 
     /**
-     * @var Directory
+     * @var DirectoryInterface
      */
     private $root;
 
-    public function __construct(Directory $root, iterable $items = null)
+    public function __construct(DirectoryInterface $root, iterable $items = null)
     {
         $this->root = $root;
 
         $this->getAppendValueValidatorChain(OrValidatorChain::class)
             ->getChainItems()
             ->appendMany([
-                new InterfaceComplianceValidator(FileInterface::class,false),
-                new InterfaceComplianceValidator(DirectoryInterface::class,false)
+                new InterfaceComplianceValidator(LDLFileInterface::class, false),
             ])
             ->lock();
 
-        parent::__construct($items);
+        parent::__construct(IterableHelper::map($items, function ($file) {
+            return FileFactory::fromTree($file, $this);
+        }));
     }
 
     /**
      * @return Directory
      */
-    public function getRoot() : Directory
+    public function getRoot(): DirectoryInterface
     {
         return $this->root;
     }
 
-    /**
-     * Deletes a tree
-     *
-     * @return FileTree
-     * @throws Exception\FileExistsException
-     * @throws Exception\FileTypeException
-     * @throws Exception\FileReadException
-     * @throws FileWriteException
-     */
-    public function delete() : FileTree
+    public function append($item, $key = null): CollectionInterface
     {
-        /**
-         * @var File|Directory $file
-         */
-        foreach($this as $file){
-            $file->delete();
+        return parent::append($item, $item->getPath());
+    }
+
+    public function removeByKey(
+        $key,
+        string $operator = Constants::OPERATOR_SEQ,
+        string $order = Constants::COMPARE_LTR
+    ): int {
+        if ($key !== $this->getRoot()->getPath()) {
+            return parent::removeByKey($key, $operator, $order);
         }
 
-        return $this;
+        $count = count($this);
+        $this->setItems([]);
+
+        return $count;
     }
 
-    /**
-     * Obtains all files in the current tree, syntax sugar for filterByClass(File::class)
-     *
-     * @return FileCollection
-     */
-    public function filterFiles() : FileCollection
+    public function remove(LDLFileInterface $file): FileTreeInterface
     {
-        return new FileCollection($this->filterByInterface(FileInterface::class));
+        $key = $file->getPath();
+
+        if ($key !== $this->getRoot()->getPath()) {
+            $this->removeByKey($key, Constants::OPERATOR_SEQ, Constants::COMPARE_LTR);
+
+            return $this;
+        }
+
+        $count = count($this);
+        $this->setItems([]);
+
+        return $count;
     }
 
-    /**
-     * Obtains all directories in the current tree, syntax sugar for filterByClass(Directory::class)
-     * @return DirectoryCollection
-     */
-    public function filterDirectories() : DirectoryCollection
+    public function filterByFileType(string $type, bool $negated = false): FileTreeInterface
     {
-        return new DirectoryCollection($this->filterByInterface(DirectoryInterface::class));
+        return $this->filterByFileTypes([$type], $negated);
     }
 
-    /**
-     * Returns a new FileTree instance with files filtered by type
-     *
-     * NOTE: A new file tree is returned since we can filter by files or directories
-     *
-     * @see FileTypeConstants
-     *
-     * @param string $type
-     * @return FileTree
-     * @throws Exception\FileExistsException
-     * @throws Exception\FileReadException
-     */
-    public function filterByFileType(string $type) : FileTree
-    {
-        return $this->filterByFileTypes([$type]);
-    }
-
-    /**
-     * Returns a new FileTree instance with files filtered by types
-     *
-     * NOTE: A new file tree is returned since we can filter by files or directories
-     *
-     * @see FileTypeConstants
-     *
-     * @param iterable $types
-     * @return FileTree
-     * @throws Exception\FileExistsException
-     * @throws Exception\FileReadException
-     */
-    public function filterByFileTypes(iterable $types) : FileTree
+    public function filterByFileTypes(iterable $types, bool $negated = false): FileTreeInterface
     {
         $types = IterableHelper::toArray($types);
 
-        $filtered = [];
-
         /**
-         * @var File|Directory $file
+         * @var FileTreeInterface $result
          */
-        foreach($this as $file){
-            if(in_array($file->getType(), $types, true)){
-                $filtered[] = $file;
-            }
-        }
+        $result = $this->filter(static function ($file) use ($types, $negated) {
+            $hasType = in_array($file->getType(), $types, true);
 
-        return new self($this->root, $filtered);
+            return $negated ? !$hasType : $hasType;
+        });
+
+        return $result;
     }
 
-    /**
-     * Filters readable files and directories and returns a FileTree containing only readable files
-     *
-     * @return FileTree
-     */
-    public function filterReadable() : FileTree
+    public function filterDirectories(): DirectoryCollectionInterface
     {
-        $return = new self($this->root);
-
-        /**
-         * @var File|Directory $file
-         */
-        foreach($this as $file){
-            if($file->isReadable()){
-                $return->append($file);
-            }
-        }
-
-        return $return;
+        return new DirectoryCollection($this->filterByFileType(FileTypeConstants::FILE_TYPE_DIRECTORY));
     }
 
-    /**
-     * Filters writable files and directories and returns a FileTree containing only writable files
-     *
-     * @return FileTree
-     */
-    public function filterWritable() : FileTree
+    public function filterFiles(): FileCollectionInterface
     {
-        $return = new self($this->root);
-
-        /**
-         * @var File|Directory $file
-         */
-        foreach($this as $file){
-            if($file->isWritable()){
-                $return->append($file);
-            }
-        }
-
-        return $return;
+        return new FileCollection($this->filterByFileType(FileTypeConstants::FILE_TYPE_REGULAR));
     }
 
-    /**
-     * Filters read & writable files and directories and returns a FileTree containing only read & writable files
-     * @return FileTree
-     */
-    public function filterReadWrite() : FileTree
+    public function filterLinks(): LinkCollectionInterface
     {
-        $return = new self($this->root);
-
-        /**
-         * @var File|Directory $file
-         */
-        foreach($this as $file){
-            if($file->isReadable() && $file->isWritable()){
-                $return->append($file);
-            }
-        }
-
-        return $return;
+        return new LinkCollection($this->filterByFileType(FileTypeConstants::FILE_TYPE_LINK));
     }
 
-    public function traverse() : iterable
+    public function filterReadable(bool $negated = false): FileTreeInterface
     {
         /**
-         * @var File|Directory $file
+         * @var FileTreeInterface $result
          */
-        foreach($this as $file){
-            if($file instanceof File){
-                yield $file;
-            }else{
+        $result = $this->filter(
+            static function ($file) use ($negated) {
+                if (!$file instanceof FilePermissionsReadInterface) {
+                    return false;
+                }
+
+                return $negated ? !$file->isReadable() : $file->isReadable();
+            });
+
+        return $result;
+    }
+
+    public function filterWritable(bool $negated = false): FileTreeInterface
+    {
+        /**
+         * @var FileTreeInterface $result
+         */
+        $result = $this->filter(
+            static function ($file) use ($negated) {
+                if (!$file instanceof FilePermissionsReadInterface) {
+                    return false;
+                }
+
+                return $negated ? !$file->isWritable() : $file->isWritable();
+            });
+
+        return $result;
+    }
+
+    public function filterReadWrite(bool $negated = false): FileTreeInterface
+    {
+        /**
+         * @var FileTreeInterface $result
+         */
+        $result = $this->filter(
+            static function ($file) use ($negated) {
+                if (!$file instanceof FilePermissionsReadInterface) {
+                    return false;
+                }
+
+                $isReadWrite = $file->isReadable() && $file->isWritable();
+
+                return $negated ? !$isReadWrite : $isReadWrite;
+            });
+
+        return $result;
+    }
+
+    public function filterByPermissions(iterable $permissions, bool $negated = false): FileTreeInterface
+    {
+        $permissions = IterableHelper::toArray($permissions);
+        /**
+         * @var FileTreeInterface $result
+         */
+        $result = $this->filter(
+            static function ($file) use ($permissions, $negated) {
+                if (!$file instanceof FilePermissionsReadInterface) {
+                    return false;
+                }
+
+                $hasPermissions = in_array($file->getPerms(), $permissions, true);
+
+                return $negated ? !$hasPermissions : $hasPermissions;
+            });
+
+        return $result;
+    }
+
+    public function traverse(): iterable
+    {
+        /**
+         * @var LDLFileInterface $file
+         */
+        foreach ($this as $file) {
+            if ($file instanceof DirectoryInterface) {
                 yield from $file->getTree();
+            } else {
+                yield $file;
             }
         }
     }
 
-    /**
-     * Change permissions of all files included in this tree to $permissions
-     *
-     * @param int $permissions
-     * @throws Exception\FileExistsException
-     * @throws FileWriteException
-     */
-    public function chmod(int $permissions) : void
-    {
-        /**
-         * @var File|Directory $file
-         */
-        foreach($this as $file){
-           $file->chmod($permissions);
-        }
-    }
-
-    /**
-     * This method allows you to refresh the tree (re scan the root directory)
-     * It is useful when files have been added or removed from the root directory.
-     *
-     * @return FileTree
-     * @throws Exception\FileExistsException
-     * @throws Exception\FileTypeException
-     * @throws Exception\FileReadException
-     */
-    public function refresh() : FileTree
+    public function refresh(): FileTreeInterface
     {
         $this->setItems(DirectoryHelper::getTree($this->root->toString()));
+
         return $this;
     }
 }

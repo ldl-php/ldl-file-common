@@ -8,8 +8,4 @@ Check validators
 Append JSON file to the collection (no exception must be thrown) ...
 OK!
 Append regular file to the collection, EXCEPTION must be thrown
-EXCEPTION: Could not decode file "/home/ldl/projects/ldl-file-common/example/JsonFileCollectionExample.php" as JSON, Decode error: Syntax error
-
-Clean up generated files ...
-
-Clean up generated files and directories ...
+OK! EXCEPTION: Could not decode file "/home/ldl/projects/ldl-file-common/example/JsonFileCollectionExample.php" as JSON, Decode error: Syntax error
