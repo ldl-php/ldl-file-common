@@ -6,7 +6,7 @@ namespace LDL\File\Traits;
 
 use LDL\File\Contracts\FileTreeInterface;
 
-trait ObserveTreeTrait
+trait FileObserveTreeTrait
 {
     /**
      * @var FileTreeInterface|null

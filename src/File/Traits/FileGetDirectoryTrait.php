@@ -7,7 +7,7 @@ namespace LDL\File\Traits;
 use LDL\File\Contracts\DirectoryInterface;
 use LDL\File\Directory;
 
-trait GetDirectoryTrait
+trait FileGetDirectoryTrait
 {
     public function getDirectory(int $levels = null): DirectoryInterface
     {

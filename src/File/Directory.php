@@ -17,11 +17,13 @@ use LDL\File\Helper\DirectoryHelper;
 use LDL\File\Helper\FilePathHelper;
 use LDL\File\Helper\FilePermsHelper;
 use LDL\File\Helper\LinkHelper;
-use LDL\File\Traits\ObserveTreeTrait;
+use LDL\File\Traits\FileDateTrait;
+use LDL\File\Traits\FileObserveTreeTrait;
 
 final class Directory implements DirectoryInterface
 {
-    use ObserveTreeTrait;
+    use FileDateTrait;
+    use FileObserveTreeTrait;
 
     /**
      * @var string

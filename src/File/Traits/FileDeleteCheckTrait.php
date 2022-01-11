@@ -6,7 +6,7 @@ namespace LDL\File\Traits;
 
 use LDL\File\Exception\FileExistsException;
 
-trait DeleteCheckTrait
+trait FileDeleteCheckTrait
 {
     private function checkIfDeleted(string $operation): void
     {
