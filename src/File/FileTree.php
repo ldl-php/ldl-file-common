@@ -22,7 +22,7 @@ use LDL\File\Contracts\FileTreeInterface;
 use LDL\File\Contracts\LDLFileInterface;
 use LDL\File\Factory\FileFactory;
 use LDL\File\Helper\DirectoryHelper;
-use LDL\File\Traits\ObserveTreeTrait;
+use LDL\File\Traits\FileObserveTreeTrait;
 use LDL\Framework\Base\Collection\Contracts\CollectionInterface;
 use LDL\Framework\Base\Constants;
 use LDL\Framework\Helper\IterableHelper;
@@ -34,7 +34,7 @@ use LDL\Validators\InterfaceComplianceValidator;
 final class FileTree extends AbstractTypedCollection implements FileTreeInterface
 {
     use AppendValueValidatorChainTrait;
-    use ObserveTreeTrait;
+    use FileObserveTreeTrait;
 
     /**
      * @var DirectoryInterface

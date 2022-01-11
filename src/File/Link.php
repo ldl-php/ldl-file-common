@@ -12,13 +12,15 @@ use LDL\File\Exception\FileTypeException;
 use LDL\File\Helper\FileHelper;
 use LDL\File\Helper\FilePathHelper;
 use LDL\File\Helper\LinkHelper;
-use LDL\File\Traits\DeleteCheckTrait;
-use LDL\File\Traits\GetDirectoryTrait;
+use LDL\File\Traits\FileDateTrait;
+use LDL\File\Traits\FileDeleteCheckTrait;
+use LDL\File\Traits\FileGetDirectoryTrait;
 
 final class Link implements LinkInterface
 {
-    use DeleteCheckTrait;
-    use GetDirectoryTrait;
+    use FileDateTrait;
+    use FileDeleteCheckTrait;
+    use FileGetDirectoryTrait;
 
     /**
      * @var bool

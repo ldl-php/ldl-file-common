@@ -29,8 +29,11 @@ interface LDLFileInterface extends ToStringInterface
      * @throws FileTypeException
      * @throws FileExistsException
      */
-    public function getDirectory(int $levels = null): DirectoryInterface;
+    public function getDirectory(int $levels): DirectoryInterface;
 
+    /**
+     * Obtains the path where this file is located.
+     */
     public function getPath(): string;
 
     /**
@@ -63,4 +66,16 @@ interface LDLFileInterface extends ToStringInterface
      * Check if the targeted file in the object instance has been deleted.
      */
     public function isDeleted(): bool;
+
+    /**
+     * Obtains the date in which this file was created.
+     */
+    public function getDateCreated(): \DateTimeInterface;
+
+    /**
+     * Obtains the date in which this file was accessed for the last time.
+     *
+     * WARNING: Some OS's (mainly linux) do not update this information that often because it's expensive to do so
+     */
+    public function getDateAccessed(): \DateTimeInterface;
 }
