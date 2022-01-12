@@ -1,0 +1,92 @@
+!!!DYNAMIC
+61ded699ca1202.00734876
+
+
+
+
+
+Sort tree by date created ...
+
+#########################################################
+
+
+
+2021-12-10 15:07:19 - /home/ldl/projects/ldl-file-common/example/PathHelperExample.php
+
+2021-12-10 15:07:19 - /home/ldl/projects/ldl-file-common/example/PathValidatorExample.php
+
+2021-12-10 15:07:19 - /home/ldl/projects/ldl-file-common/example/DirectoryExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/lib
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/WritableFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/RecursivePermissionsExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/ReadableFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/ReadWriteFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/DirectoryCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/ObservableTreeExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/JsonFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/FileCollectionExample.php
+
+2022-01-11 14:42:20 - /home/ldl/projects/ldl-file-common/example/FileExample.php
+
+2022-01-11 14:48:15 - /home/ldl/projects/ldl-file-common/example/output
+
+2022-01-11 15:15:52 - /home/ldl/projects/ldl-file-common/example/DirectoryCopy.php
+
+2022-01-11 15:15:52 - /home/ldl/projects/ldl-file-common/example/LinkExample.php
+
+2022-01-11 15:15:52 - /home/ldl/projects/ldl-file-common/example/DirectoryMove.php
+
+2022-01-12 13:24:31 - /home/ldl/projects/ldl-file-common/example/TreeDateSortingExample.php
+
+
+
+Sort tree by date accessed ...
+
+#########################################################
+
+
+
+2022-01-10 15:54:06 - /home/ldl/projects/ldl-file-common/example/PathHelperExample.php
+
+2022-01-10 15:54:06 - /home/ldl/projects/ldl-file-common/example/PathValidatorExample.php
+
+2022-01-10 15:54:06 - /home/ldl/projects/ldl-file-common/example/DirectoryExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/WritableFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/RecursivePermissionsExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/ReadableFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/ReadWriteFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/DirectoryCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/ObservableTreeExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/JsonFileCollectionExample.php
+
+2022-01-11 13:09:23 - /home/ldl/projects/ldl-file-common/example/FileCollectionExample.php
+
+2022-01-11 14:42:20 - /home/ldl/projects/ldl-file-common/example/FileExample.php
+
+2022-01-11 14:48:15 - /home/ldl/projects/ldl-file-common/example/output
+
+2022-01-11 15:15:52 - /home/ldl/projects/ldl-file-common/example/DirectoryCopy.php
+
+2022-01-11 15:15:52 - /home/ldl/projects/ldl-file-common/example/LinkExample.php
+
+2022-01-11 15:15:52 - /home/ldl/projects/ldl-file-common/example/DirectoryMove.php
+
+2022-01-12 13:23:37 - /home/ldl/projects/ldl-file-common/example/lib
+
+2022-01-12 13:24:31 - /home/ldl/projects/ldl-file-common/example/TreeDateSortingExample.php

@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - feature/1201506215455290 - Add File::getExtension() : string method
 - feature/1201612851578934 - Add linking methods and Link class / Separate interfaces / Observable pattern on tree
 - feature/1201645038896279 - Add date access methods to LDLFileInterface
+- feature/1201645038896283 - Add sort by date methods to FileTreeInterface
 
 ### Changed
 
