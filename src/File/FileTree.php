@@ -25,7 +25,9 @@ use LDL\File\Helper\DirectoryHelper;
 use LDL\File\Traits\FileObserveTreeTrait;
 use LDL\Framework\Base\Collection\Contracts\CollectionInterface;
 use LDL\Framework\Base\Constants;
+use LDL\Framework\Helper\ComparisonOperatorHelper;
 use LDL\Framework\Helper\IterableHelper;
+use LDL\Framework\Helper\SortHelper;
 use LDL\Type\Collection\AbstractTypedCollection;
 use LDL\Type\Collection\Traits\Validator\AppendValueValidatorChainTrait;
 use LDL\Validators\Chain\OrValidatorChain;
@@ -52,8 +54,10 @@ final class FileTree extends AbstractTypedCollection implements FileTreeInterfac
             ])
             ->lock();
 
+        $items = $items ?? DirectoryHelper::getFilesAsStringArray($root->getPath());
+
         parent::__construct(IterableHelper::map($items, function ($file) {
-            return FileFactory::fromTree($file, $this);
+            return FileFactory::fromTree((string) $file, $this);
         }));
     }
 
@@ -222,6 +226,46 @@ final class FileTree extends AbstractTypedCollection implements FileTreeInterfac
                 yield $file;
             }
         }
+    }
+
+    public function sortByDateCreated(string $order = Constants::SORT_ASCENDING): FileTreeInterface
+    {
+        $operator = Constants::SORT_DESCENDING ? Constants::OPERATOR_GT : Constants::OPERATOR_LT;
+        $direction = Constants::SORT_DESCENDING ? Constants::COMPARE_LTR : Constants::COMPARE_RTL;
+
+        return new self(
+            $this->root,
+            SortHelper::sortByCallback(
+                static function (LDLFileInterface $fileA, LDLFileInterface $fileB) use ($operator, $direction): bool {
+                    return ComparisonOperatorHelper::compare(
+                        $fileA->getDateCreated()->getTimestamp(),
+                        $fileB->getDateCreated()->getTimestamp(),
+                        $operator,
+                        $direction
+                    );
+                }, iterator_to_array($this, true)
+            )
+        );
+    }
+
+    public function sortByDateAccessed(string $order = Constants::SORT_ASCENDING): FileTreeInterface
+    {
+        $operator = Constants::SORT_DESCENDING ? Constants::OPERATOR_GT : Constants::OPERATOR_LT;
+        $direction = Constants::SORT_DESCENDING ? Constants::COMPARE_LTR : Constants::COMPARE_RTL;
+
+        return new self(
+            $this->root,
+            SortHelper::sortByCallback(
+                static function (LDLFileInterface $fileA, LDLFileInterface $fileB) use ($operator, $direction): bool {
+                    return ComparisonOperatorHelper::compare(
+                        $fileA->getDateAccessed()->getTimestamp(),
+                        $fileB->getDateAccessed()->getTimestamp(),
+                        $operator,
+                        $direction
+                    );
+                }, iterator_to_array($this, true)
+            )
+        );
     }
 
     public function refresh(): FileTreeInterface

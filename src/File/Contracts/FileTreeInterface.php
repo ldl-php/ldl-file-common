@@ -67,11 +67,24 @@ interface FileTreeInterface extends TypedCollectionInterface
      */
     public function filterByFileTypes(iterable $types, bool $negated): FileTreeInterface;
 
+    /**
+     * Filter files and return a FileCollection.
+     */
     public function filterFiles(): FileCollectionInterface;
 
+    /**
+     * Filter links and return a LinkCollection.
+     */
     public function filterLinks(): LinkCollectionInterface;
 
+    /**
+     * Filter directories and return a DirectoryCollection.
+     */
     public function filterDirectories(): DirectoryCollectionInterface;
+
+    public function sortByDateCreated(string $order): FileTreeInterface;
+
+    public function sortByDateAccessed(string $order): FileTreeInterface;
 
     /**
      * Filters files by permissions, do not confuse this with filterReadable/Writable

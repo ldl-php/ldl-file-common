@@ -159,6 +159,23 @@ final class DirectoryHelper
             throw new FileReadException("Directory \"$path\" is not readable!");
         }
 
+        return new FileTree($dir, self::getFilesAsStringArray($path));
+    }
+
+    /**
+     * @return string[]
+     *
+     * @throws FileReadException
+     * @throws FileTypeException
+     */
+    public static function getFilesAsStringArray(string $path): array
+    {
+        $dir = new Directory($path);
+
+        if (!$dir->isReadable()) {
+            throw new FileReadException("Directory \"$path\" is not readable!");
+        }
+
         $files = [];
 
         foreach (scandir($path) as $file) {
@@ -168,7 +185,7 @@ final class DirectoryHelper
             $files[] = FilePathHelper::createAbsolutePath($dir->toString(), $file);
         }
 
-        return new FileTree($dir, $files);
+        return $files;
     }
 
     /**
