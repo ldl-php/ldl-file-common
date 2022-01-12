@@ -78,4 +78,19 @@ interface LDLFileInterface extends ToStringInterface
      * WARNING: Some OS's (mainly linux) do not update this information that often because it's expensive to do so
      */
     public function getDateAccessed(): \DateTimeInterface;
+
+    /**
+     * @throws FileWriteException
+     */
+    public function chown(?string $user, ?string $group): void;
+
+    /**
+     * @throws FileReadException
+     */
+    public function getOwner(): int;
+
+    /**
+     * @throws FileReadException
+     */
+    public function getGroup(): int;
 }

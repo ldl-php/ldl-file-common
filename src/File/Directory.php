@@ -19,11 +19,13 @@ use LDL\File\Helper\FilePermsHelper;
 use LDL\File\Helper\LinkHelper;
 use LDL\File\Traits\FileDateTrait;
 use LDL\File\Traits\FileObserveTreeTrait;
+use LDL\File\Traits\FileOwnershipTrait;
 
 final class Directory implements DirectoryInterface
 {
     use FileDateTrait;
     use FileObserveTreeTrait;
+    use FileOwnershipTrait;
 
     /**
      * @var string
@@ -106,6 +108,11 @@ final class Directory implements DirectoryInterface
         $this->_tObserveTreeTrait = DirectoryHelper::getTree($this->path, $observable);
 
         return $this->_tObserveTreeTrait;
+    }
+
+    public function chown(?string $user, ?string $group, bool $recursive = false): void
+    {
+        DirectoryHelper::chown($this->path, $user, $group, $recursive);
     }
 
     /**

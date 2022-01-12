@@ -8,13 +8,12 @@ declare(strict_types=1);
  */
 
 require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../example/lib/example-helper.php';
 
 use LDL\File\Contracts\LDLFileInterface;
-use LDL\File\Directory;
-use LDL\File\FileTree;
 use LDL\Framework\Base\Constants;
 
-$tree = new FileTree(new Directory(__DIR__));
+$tree = createTestFiles()->getTree();
 
 echo "\nSort tree by date created ...\n";
 echo "#########################################################\n\n";

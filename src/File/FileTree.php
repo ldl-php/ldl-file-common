@@ -23,7 +23,6 @@ use LDL\File\Contracts\LDLFileInterface;
 use LDL\File\Factory\FileFactory;
 use LDL\File\Helper\DirectoryHelper;
 use LDL\File\Traits\FileObserveTreeTrait;
-use LDL\Framework\Base\Collection\Contracts\CollectionInterface;
 use LDL\Framework\Base\Constants;
 use LDL\Framework\Helper\ComparisonOperatorHelper;
 use LDL\Framework\Helper\IterableHelper;
@@ -67,11 +66,6 @@ final class FileTree extends AbstractTypedCollection implements FileTreeInterfac
     public function getRoot(): DirectoryInterface
     {
         return $this->root;
-    }
-
-    public function append($item, $key = null): CollectionInterface
-    {
-        return parent::append($item, $item->getPath());
     }
 
     public function removeByKey(

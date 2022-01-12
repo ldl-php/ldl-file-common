@@ -1,6 +1,7 @@
 Create some random files in /tmp/ldl-file-common and append them to a Directory collection
 
-Set file /tmp/ldl-file-common/.hidden_11 as readable
+Randomizing permissions ...
+Set file /tmp/ldl-file-common/.hidden_11 as not readable
 Set file /tmp/ldl-file-common/.hidden_12 as readable
 Set file /tmp/ldl-file-common/.hidden_13 as readable
 Set file /tmp/ldl-file-common/.hidden_14 as readable
@@ -18,15 +19,9 @@ Set file /tmp/ldl-file-common/9.txt as readable
 
 Print files which are readable:
 
-/tmp/ldl-file-common/.hidden_11
 /tmp/ldl-file-common/.hidden_12
-/tmp/ldl-file-common/.hidden_13
 /tmp/ldl-file-common/.hidden_14
-/tmp/ldl-file-common/.hidden_15
-/tmp/ldl-file-common/1.txt
-/tmp/ldl-file-common/3.txt
-/tmp/ldl-file-common/5.txt
-/tmp/ldl-file-common/7.txt
-/tmp/ldl-file-common/9.txt
 
 Attempt to append entire file tree (which contains readable and non-readable files) EXCEPTION must be thrown
+
+OK EXCEPTION: File "/tmp/ldl-file-common/.hidden_11" is not readable!

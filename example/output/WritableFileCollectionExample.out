@@ -1,6 +1,7 @@
 Create some random files in /tmp/ldl-file-common and append them to a Directory collection
 
-Set file /tmp/ldl-file-common/.hidden_11 as readable
+Randomizing permissions ...
+Set file /tmp/ldl-file-common/.hidden_11 as not readable
 Set file /tmp/ldl-file-common/.hidden_12 as readable
 Set file /tmp/ldl-file-common/.hidden_13 as readable
 Set file /tmp/ldl-file-common/.hidden_14 as readable
