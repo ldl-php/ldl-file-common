@@ -15,12 +15,14 @@ use LDL\File\Helper\LinkHelper;
 use LDL\File\Traits\FileDateTrait;
 use LDL\File\Traits\FileDeleteCheckTrait;
 use LDL\File\Traits\FileGetDirectoryTrait;
+use LDL\File\Traits\FileOwnershipTrait;
 
 final class Link implements LinkInterface
 {
     use FileDateTrait;
     use FileDeleteCheckTrait;
     use FileGetDirectoryTrait;
+    use FileOwnershipTrait;
 
     /**
      * @var bool

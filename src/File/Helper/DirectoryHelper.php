@@ -13,6 +13,7 @@ use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
 use LDL\File\File;
 use LDL\File\FileTree;
+use LDL\Framework\Base\Exception\InvalidArgumentException;
 
 final class DirectoryHelper
 {
@@ -168,7 +169,7 @@ final class DirectoryHelper
      * @throws FileReadException
      * @throws FileTypeException
      */
-    public static function getFilesAsStringArray(string $path): array
+    public static function getFilesAsStringArray(string $path, bool $recursive = false): array
     {
         $dir = new Directory($path);
 
@@ -182,7 +183,15 @@ final class DirectoryHelper
             if ('.' === $file || '..' === $file) {
                 continue;
             }
-            $files[] = FilePathHelper::createAbsolutePath($dir->toString(), $file);
+
+            $filePath = FilePathHelper::createAbsolutePath($dir->toString(), $file);
+
+            if (!$recursive) {
+                $files[] = $filePath;
+                continue;
+            }
+
+            $files += self::getFilesAsStringArray($path, $recursive);
         }
 
         return $files;
@@ -207,6 +216,35 @@ final class DirectoryHelper
             }
             $file = FilePathHelper::createAbsolutePath($dir->toString(), $file);
             yield is_dir($file) ? new Directory($file) : new File($file);
+        }
+    }
+
+    /**
+     * @throws FileExistsException
+     * @throws FileReadException
+     * @throws FileTypeException
+     * @throws InvalidArgumentException
+     */
+    public static function chown(
+        string $path,
+        ?string $user,
+        ?string $group,
+        bool $recursive = false
+    ): void {
+        $dir = new Directory($path);
+
+        if (!$dir->isReadable()) {
+            throw new FileReadException("Directory $dir is not readable!");
+        }
+
+        FileOwnershipHelper::chown($dir->getPath(), $user, $group);
+
+        if (!$recursive) {
+            return;
+        }
+
+        foreach ($dir->getTree()->traverse() as $file) {
+            FileOwnershipHelper::chown((string) $file, $user, $group);
         }
     }
 }

@@ -1,0 +1,4 @@
+Create test files ...
+Create some random files in /tmp/ldl-file-common and append them to a Directory collection
+
+Chown recursively the created directory to user 'ldl'

@@ -59,15 +59,15 @@ function createTestFiles(): Directory
 
 function randomizePermissions(DirectoryInterface $dir): void
 {
+    echo "Randomizing permissions ...\n";
     /*
- * Assign readable and non readable permissions to files which are NOT links
- */
-    $i = 0;
+     * Assign readable and non readable permissions to files which are NOT links
+     * since links can not be chmod'ed.
+     */
     foreach ($dir->getTree()->filterByFileType(FileTypeConstants::FILE_TYPE_LINK, true) as $i => $file) {
-        $permission = $i ? 0444 : 0000;
-        $i = 0 === $i ? 1 : 0;
+        $permission = ($i % 2) ? 0444 : 0000;
         $file->chmod($permission);
 
-        echo sprintf('Set file %s as %s', $file, 0444 == $permission ? "readable\n" : "not readable\n");
+        echo sprintf('Set file %s as %s', $file, $i ? "readable\n" : "not readable\n");
     }
 }
