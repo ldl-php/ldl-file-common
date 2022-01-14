@@ -99,6 +99,21 @@ final class FileTree extends AbstractTypedCollection implements FileTreeInterfac
         return $count;
     }
 
+    public function getFileByName(string $name): ?LDLFileInterface
+    {
+        $name = basename($name);
+        /**
+         * @var LDLFileInterface $file
+         */
+        foreach ($this as $file) {
+            if ($file->getName() === $name) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+
     public function filterByFileType(string $type, bool $negated = false): FileTreeInterface
     {
         return $this->filterByFileTypes([$type], $negated);

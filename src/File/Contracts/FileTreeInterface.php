@@ -93,4 +93,9 @@ interface FileTreeInterface extends TypedCollectionInterface
      * @param iterable $permissions an iterable containing a set of numeric permissions
      */
     public function filterByPermissions(iterable $permissions): FileTreeInterface;
+
+    /**
+     * Obtains a file from the tree by name.
+     */
+    public function getFileByName(string $name): ?LDLFileInterface;
 }

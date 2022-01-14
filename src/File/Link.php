@@ -15,6 +15,7 @@ use LDL\File\Helper\LinkHelper;
 use LDL\File\Traits\FileDateTrait;
 use LDL\File\Traits\FileDeleteCheckTrait;
 use LDL\File\Traits\FileGetDirectoryTrait;
+use LDL\File\Traits\FileNameTrait;
 use LDL\File\Traits\FileOwnershipTrait;
 
 final class Link implements LinkInterface
@@ -23,6 +24,7 @@ final class Link implements LinkInterface
     use FileDeleteCheckTrait;
     use FileGetDirectoryTrait;
     use FileOwnershipTrait;
+    use FileNameTrait;
 
     /**
      * @var bool

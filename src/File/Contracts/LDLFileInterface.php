@@ -37,6 +37,11 @@ interface LDLFileInterface extends ToStringInterface
     public function getPath(): string;
 
     /**
+     * Obtains the file name (without the path).
+     */
+    public function getName(): string;
+
+    /**
      * @throws FileExistsException
      * @throws FileReadException
      * @throws FileTypeException

@@ -18,6 +18,7 @@ use LDL\File\Helper\FilePathHelper;
 use LDL\File\Helper\FilePermsHelper;
 use LDL\File\Helper\LinkHelper;
 use LDL\File\Traits\FileDateTrait;
+use LDL\File\Traits\FileNameTrait;
 use LDL\File\Traits\FileObserveTreeTrait;
 use LDL\File\Traits\FileOwnershipTrait;
 
@@ -26,6 +27,7 @@ final class Directory implements DirectoryInterface
     use FileDateTrait;
     use FileObserveTreeTrait;
     use FileOwnershipTrait;
+    use FileNameTrait;
 
     /**
      * @var string

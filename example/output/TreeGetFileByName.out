@@ -1,0 +1,5 @@
+Create directory tree instance from directory /home/ldl/projects/ldl-file-common/example
+
+Get file /home/ldl/projects/ldl-file-common/example/TreeGetFileByName.php from previously created tree
+
+OK: Got file /home/ldl/projects/ldl-file-common/example/TreeGetFileByName.php

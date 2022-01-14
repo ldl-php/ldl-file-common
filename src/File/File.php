@@ -15,6 +15,7 @@ use LDL\File\Exception\FileWriteException;
 use LDL\File\Helper\FileHelper;
 use LDL\File\Helper\FilePermsHelper;
 use LDL\File\Traits\FileDateTrait;
+use LDL\File\Traits\FileNameTrait;
 use LDL\File\Traits\FileObserveTreeTrait;
 use LDL\File\Traits\FileOwnershipTrait;
 use LDL\Type\Collection\Types\String\StringCollection;
@@ -24,6 +25,7 @@ final class File implements FileInterface
     use FileDateTrait;
     use FileObserveTreeTrait;
     use FileOwnershipTrait;
+    use FileNameTrait;
 
     /**
      * @var string
