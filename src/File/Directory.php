@@ -190,6 +190,11 @@ final class Directory implements DirectoryInterface
         return LinkHelper::getTarget($this->path);
     }
 
+    public function mkpath(...$pieces): string
+    {
+        return FilePathHelper::createAbsolutePath($this->getPath(), ...$pieces);
+    }
+
     //<editor-fold desc="ToStringInterface Methods">
     public function toString(): string
     {

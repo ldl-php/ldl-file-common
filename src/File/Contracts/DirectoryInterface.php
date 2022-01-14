@@ -47,4 +47,11 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
         string $contents,
         int $permissions
     ): FileInterface;
+
+    /**
+     * Returns a string path relative to the current directory.
+     *
+     * @param iterable ...$pieces
+     */
+    public function mkpath(...$pieces): string;
 }
