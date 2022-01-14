@@ -1,0 +1,7 @@
+Create relative path to directory /home/ldl/projects/ldl-file-common/example
+
+/home/ldl/projects/ldl-file-common/example/this/is/a/new/path
+
+Create relative path With an INCORRECT type in mkpath arguments, EXCEPTION must be thrown
+
+OK Exception: Argument number "4" is a compound type: "array". Only string|int|double are accepted
