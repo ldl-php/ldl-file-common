@@ -45,7 +45,8 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
     public function mkfile(
         string $name,
         string $contents,
-        int $permissions
+        int $permissions,
+        bool $overwrite
     ): FileInterface;
 
     /**
