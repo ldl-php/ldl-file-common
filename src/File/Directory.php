@@ -89,14 +89,16 @@ final class Directory implements DirectoryInterface
     public function mkfile(
         string $name,
         string $contents = '',
-        int $permissions = 0644
+        int $permissions = 0644,
+        bool $overwrite = false
     ): FileInterface {
         $name = basename($name);
 
         return File::create(
             FilePathHelper::createAbsolutePath($this->path, $name),
             $contents,
-            $permissions
+            $permissions,
+            $overwrite
         );
     }
 
