@@ -241,4 +241,16 @@ final class File implements FileInterface
         throw new FileExistsException($msg);
     }
     //</editor-fold>
+
+    /**
+     * returns file mime type
+     * @param string|null $mimeDatabase
+     * @throws FileExistsException
+     * @throws FileReadException
+     * @return string|null
+     */
+    public function getMimeType(?string $mimeDatabase = null): ?string
+    {
+        return FileHelper::getMimeType($this->getPath(), $mimeDatabase);
+    }
 }

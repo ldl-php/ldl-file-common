@@ -1,0 +1,13 @@
+Create a new File instance
+
+Get file mime type from File->getMimeType():
+
+text/x-php; charset=us-ascii
+
+Get file mime type from MimeHelper::getType():
+
+text/x-php; charset=us-ascii
+
+throws exception if mime database doesn't exists
+
+EXCEPTION: Mime database file /usr/share/misc/magic.mime doesn't exists
