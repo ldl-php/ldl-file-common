@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LDL\File\Helper;
 
-use LDL\File\Constants\FileTypeConstants;
+use LDL\File\File;
 use LDL\File\Contracts\FileInterface;
-use LDL\File\Exception\FileExistsException;
+use LDL\File\Constants\FileTypeConstants;
 use LDL\File\Exception\FileReadException;
 use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
-use LDL\File\File;
+use LDL\File\Exception\FileExistsException;
 use LDL\Type\Collection\Types\String\StringCollection;
 
 final class FileHelper
@@ -199,5 +199,39 @@ final class FileHelper
         self::delete($source);
 
         return $return;
+    }
+
+    /**
+     * returns file mime type
+     * @param string|null $mimeDatabase
+     * @throws FileExistsException
+     * @throws FileReadException
+     * @return string|null
+     */
+    public static function getMimeType(string $file, ?string $mimeDatabase = null): ?string
+    {
+        if (null !== $mimeDatabase) {
+            $mimeDatabase = new File($mimeDatabase);
+        }
+
+        $file = new File($file);
+
+        if (!$file->isReadable()) {
+            throw new FileReadException(sprintf(
+                'File %s is not readable',
+                $file->getPath()
+            ));
+        }
+
+        $finfo = null === $mimeDatabase ?
+            finfo_open(\FILEINFO_MIME) :
+            finfo_open(\FILEINFO_MIME, $mimeDatabase->getPath());
+            
+
+        $mimeType = finfo_file($finfo, $file->getPath());
+
+        finfo_close($finfo);
+
+        return $mimeType ?: null;
     }
 }

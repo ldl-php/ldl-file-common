@@ -49,5 +49,29 @@ interface FileInterface extends LDLFileInterface, FilePermissionsReadInterface, 
 
     public function isWritable(): bool;
 
-    public function isReadable(): bool;
+    /**
+     * @return bool
+     */
+    public function isReadable() : bool;
+
+    /**
+     * Returns file type
+     *
+     * @see FileTypeConstants
+     * @return string
+     *
+     * @throws FileExistsException
+     * @throws FileReadException
+     *
+     */
+    public function getType() : string;
+    
+    /**
+     * returns file mime type
+     * @param string|null $mimeDatabase
+     * @throws FileExistsException
+     * @throws FileReadException
+     * @return string|null
+     */
+    public function getMimeType(?string $mimeDatabase = null): ?string;
 }
