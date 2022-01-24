@@ -15,16 +15,7 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
      * @throws FileExistsException
      * @throws FileWriteException
      */
-    public static function create(string $path, int $permissions): DirectoryInterface;
-
-    /**
-     * Returns a Tree (containing FileInterface objects and DirectoryInterface objects).
-     *
-     * @throws FileReadException
-     * @throws FileTypeException
-     * @throws FileExistsException
-     */
-    public function getTree(): FileTreeInterface;
+    public static function create(string $path, int $permissions, bool $overwrite): DirectoryInterface;
 
     /**
      * Creates a directory inside of the current directory.
@@ -33,7 +24,7 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
      * @throws FileWriteException
      * @throws FileTypeException
      */
-    public function mkdir(string $path, int $permissions = 0755): DirectoryInterface;
+    public function mkdir(string $path, int $permissions, bool $force): DirectoryInterface;
 
     /**
      * Creates a new file in the current directory.
@@ -50,7 +41,18 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
     ): FileInterface;
 
     /**
+     * Returns a Tree (containing FileInterface objects and DirectoryInterface objects).
+     *
+     * @throws FileReadException
+     * @throws FileTypeException
+     * @throws FileExistsException
+     */
+    public function getTree(): FileTreeInterface;
+
+    /**
      * Returns a string path relative to the current directory.
+     *
+     * This will NOT create any file or directory.
      *
      * @param iterable ...$pieces
      */
