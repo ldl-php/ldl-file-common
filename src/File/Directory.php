@@ -65,9 +65,9 @@ final class Directory implements DirectoryInterface
         return new Directory(dirname($this->path, $levels), $this->_tObserveTreeTrait);
     }
 
-    public static function create(string $path, int $permissions = 0755): DirectoryInterface
+    public static function create(string $path, int $permissions = 0755, bool $force = false): DirectoryInterface
     {
-        return DirectoryHelper::create($path, $permissions);
+        return DirectoryHelper::create($path, $permissions, $force);
     }
 
     public function getType(): string
@@ -75,7 +75,7 @@ final class Directory implements DirectoryInterface
         return FileTypeConstants::FILE_TYPE_DIRECTORY;
     }
 
-    public function mkdir(string $path, int $permissions = 0755): DirectoryInterface
+    public function mkdir(string $path, int $permissions = 0755, bool $overwrite = false): DirectoryInterface
     {
         if (!$this->isWritable()) {
             throw new FileWriteException("Directory {$this->path} is not writable!");
@@ -83,7 +83,7 @@ final class Directory implements DirectoryInterface
 
         $path = FilePathHelper::createAbsolutePath($this->path, $path);
 
-        return DirectoryHelper::create($path, $permissions);
+        return DirectoryHelper::create($path, $permissions, $overwrite);
     }
 
     public function mkfile(

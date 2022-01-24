@@ -19,15 +19,23 @@ final class DirectoryHelper
 {
     /**
      * @throws FileExistsException
+     * @throws FileReadException
+     * @throws FileTypeException
      * @throws FileWriteException
      */
-    public static function create(string $path, int $mode): Directory
+    public static function create(string $path, int $mode, bool $force = false): Directory
     {
-        if (is_dir($path)) {
+        $exists = is_dir($path);
+
+        if (!$force && $exists) {
             throw new FileExistsException("Directory \"$path\" already exists!");
         }
 
-        if (!@mkdir($path, $mode) && !is_dir($path)) {
+        if ($force && $exists) {
+            self::delete($path);
+        }
+
+        if (!@mkdir($path, $mode, true) && !is_dir($path)) {
             throw new FileWriteException("Unable to create directory: $path");
         }
 
@@ -103,7 +111,7 @@ final class DirectoryHelper
             FileHelper::delete($dest);
         }
 
-        if (!mkdir($dest, $perms) && !is_dir($dest)) {
+        if (!mkdir($dest, $perms, true) && !is_dir($dest)) {
             throw new FileWriteException(sprintf('Could not create directory "%s"', $dest));
         }
 
