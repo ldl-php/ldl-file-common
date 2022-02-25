@@ -85,7 +85,7 @@ final class Directory implements DirectoryInterface
         $return = new DirectoryCollection();
 
         foreach ($directories as $dir) {
-            $return->append(self::create($dir, $permissions, $overwrite));
+            $return->append(self::create($this->mkpath($dir), $permissions, $overwrite));
         }
 
         return $return;
