@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace LDL\File\Helper;
 
-use LDL\File\File;
-use LDL\File\Contracts\FileInterface;
 use LDL\File\Constants\FileTypeConstants;
+use LDL\File\Contracts\FileInterface;
+use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileReadException;
 use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
-use LDL\File\Exception\FileExistsException;
+use LDL\File\File;
 use LDL\Type\Collection\Types\String\StringCollection;
 
 final class FileHelper
@@ -141,6 +141,10 @@ final class FileHelper
      */
     public static function copy(string $source, string $dest, bool $overwrite = false): FileInterface
     {
+        if (is_dir($dest)) {
+            $dest = FilePathHelper::createAbsolutePath($dest, basename($source));
+        }
+
         if (!is_readable($source)) {
             throw new FileReadException("Source file \"$source\" is not readable");
         }
@@ -202,11 +206,10 @@ final class FileHelper
     }
 
     /**
-     * returns file mime type
-     * @param string|null $mimeDatabase
+     * returns file mime type.
+     *
      * @throws FileExistsException
      * @throws FileReadException
-     * @return string|null
      */
     public static function getMimeType(string $file, ?string $mimeDatabase = null): ?string
     {
@@ -217,16 +220,12 @@ final class FileHelper
         $file = new File($file);
 
         if (!$file->isReadable()) {
-            throw new FileReadException(sprintf(
-                'File %s is not readable',
-                $file->getPath()
-            ));
+            throw new FileReadException(sprintf('File %s is not readable', $file->getPath()));
         }
 
         $finfo = null === $mimeDatabase ?
             finfo_open(\FILEINFO_MIME) :
             finfo_open(\FILEINFO_MIME, $mimeDatabase->getPath());
-            
 
         $mimeType = finfo_file($finfo, $file->getPath());
 

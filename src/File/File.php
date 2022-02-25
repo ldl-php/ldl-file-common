@@ -170,9 +170,7 @@ final class File implements FileInterface
 
     public function copy(string $dest, bool $overwrite): LDLFileInterface
     {
-        FileHelper::copy($this->toString(), $dest, $overwrite);
-
-        return new self($dest);
+        return FileHelper::copy($this->toString(), $dest, $overwrite);
     }
 
     public function getDirectory(int $levels = null): DirectoryInterface
@@ -243,11 +241,10 @@ final class File implements FileInterface
     //</editor-fold>
 
     /**
-     * returns file mime type
-     * @param string|null $mimeDatabase
+     * returns file mime type.
+     *
      * @throws FileExistsException
      * @throws FileReadException
-     * @return string|null
      */
     public function getMimeType(?string $mimeDatabase = null): ?string
     {
