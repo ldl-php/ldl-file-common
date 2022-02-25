@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LDL\File\Contracts;
 
+use LDL\File\Collection\Contracts\DirectoryCollectionInterface;
 use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileReadException;
 use LDL\File\Exception\FileTypeException;
@@ -25,6 +26,15 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
      * @throws FileTypeException
      */
     public function mkdir(string $path, int $permissions, bool $force): DirectoryInterface;
+
+    /**
+     * Creates many directories inside the current directory, returns created directories as a DirectoryCollection.
+     */
+    public function mmkdir(
+        iterable $directories,
+        int $permissions = 0755,
+        bool $overwrite = false
+    ): DirectoryCollectionInterface;
 
     /**
      * Creates a new file in the current directory.
