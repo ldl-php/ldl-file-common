@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LDL\File;
 
+use LDL\File\Collection\Contracts\DirectoryCollectionInterface;
+use LDL\File\Collection\DirectoryCollection;
 use LDL\File\Constants\FileTypeConstants;
 use LDL\File\Contracts\DirectoryInterface;
 use LDL\File\Contracts\FileInterface;
@@ -73,6 +75,20 @@ final class Directory implements DirectoryInterface
     public function getType(): string
     {
         return FileTypeConstants::FILE_TYPE_DIRECTORY;
+    }
+
+    public function mmkdir(
+        iterable $directories,
+        int $permissions = 0755,
+        bool $overwrite = false
+    ): DirectoryCollectionInterface {
+        $return = new DirectoryCollection();
+
+        foreach ($directories as $dir) {
+            $return->append(self::create($dir, $permissions, $overwrite));
+        }
+
+        return $return;
     }
 
     public function mkdir(string $path, int $permissions = 0755, bool $overwrite = false): DirectoryInterface
