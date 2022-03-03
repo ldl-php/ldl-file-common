@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Added
 
+- feature/1201913358758253 - Add FileHelper::createSysTempFile() : FileInterface
 - feature/1201913358758249 - Add DirectoryHelper::getSysTempDir() : DirectoryInterface
 - feature/1201884322133686 - Add DirectoryInterface::mmkdir
 - feature/1201707436744968 - Add force options to Directory::create
