@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LDL\File\Helper;
 
+use LDL\File\Contracts\DirectoryInterface;
 use LDL\File\Contracts\FileTreeInterface;
 use LDL\File\Directory;
 use LDL\File\Exception\FileException;
@@ -40,6 +41,16 @@ final class DirectoryHelper
         }
 
         return new Directory($path);
+    }
+
+    /**
+     * Returns a directory instance pointing to the system's temporary directory.
+     *
+     * @throws FileTypeException
+     */
+    public static function getSysTempDir(): DirectoryInterface
+    {
+        return new Directory(sys_get_temp_dir());
     }
 
     /**
