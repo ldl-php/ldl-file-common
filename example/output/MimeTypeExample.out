@@ -10,4 +10,4 @@ text/x-php; charset=us-ascii
 
 throws exception if mime database doesn't exists
 
-EXCEPTION: Mime database file /usr/share/misc/magic.mime doesn't exists
+EXCEPTION: File /usr/share/misc/magic.mime does not exists, if you want to create it please use: LDL\File\File::create
