@@ -233,4 +233,22 @@ final class FileHelper
 
         return $mimeType ?: null;
     }
+
+    /**
+     * Creates a temporary file in the system's temp directory.
+     *
+     * @throws FileExistsException
+     * @throws FileTypeException
+     * @throws FileWriteException
+     */
+    public static function createSysTempFile(string $name = null, string $contents = '', int $perms = 0600): FileInterface
+    {
+        return DirectoryHelper::getSysTempDir()
+            ->mkfile(
+                $name ?? sha1(uniqid('ldl_', true)),
+                $contents,
+                $perms,
+                true
+            );
+    }
 }
