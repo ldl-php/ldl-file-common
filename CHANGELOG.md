@@ -17,5 +17,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
+- fix/1201928615675067 - Fix FilePathHelper::getRelativePath
 - fix/1201885744311701 - Fix File::copy
 - fix/1201885274091941 - Fix Directory::mmkdir / Add mmkdir example
