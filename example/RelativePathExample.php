@@ -9,9 +9,12 @@ use LDL\Framework\Base\Exception\InvalidArgumentException;
 
 echo "Create test files ...\n";
 
-echo "Get relative path from /etc/cron.d to /tmp\n";
+$pathA = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : '/etc/cron.d';
+$pathB = isset($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : '/etc/cron.d/temp';
 
-var_dump(FilePathHelper::getRelativePath('/etc/cron.d', '/tmp'));
+echo "Get relative path from $pathA to $pathB\n";
+
+var_dump(FilePathHelper::getRelativePath($pathA, $pathB));
 
 try {
     echo "Try to create a relative path from a non-absolute path, EXCEPTION must be thrown\n";

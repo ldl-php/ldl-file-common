@@ -105,18 +105,15 @@ final class FilePathHelper
 
             $remaining = $fromAmount - $depth;
 
-            if ($remaining > 1) {
-                $relPath = array_pad(
-                    $relPath,
-                    (count($relPath) + $remaining - 1) * -1,
-                    '..'
-                );
-                break;
-            }
-
-            $relPath[0] = sprintf('.%s%s', \DIRECTORY_SEPARATOR, $relPath[0]);
+            $relPath = array_pad(
+                $relPath,
+                (count($relPath) + $remaining) * -1,
+                '..'
+            );
         }
 
-        return implode(\DIRECTORY_SEPARATOR, $relPath);
+        $path = implode('/', $relPath);
+
+        return '.' !== $path[0] ? "./$path" : $path;
     }
 }
