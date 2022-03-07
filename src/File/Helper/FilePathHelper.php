@@ -62,4 +62,61 @@ final class FilePathHelper
 
         return self::getAbsolutePath(implode(\DIRECTORY_SEPARATOR, $parts));
     }
+
+    /**
+     * Normalize path separator to $separator ('/' by default).
+     */
+    public static function normalize(string $path, string $separator = '/'): string
+    {
+        return preg_replace(sprintf('#%s#', \DIRECTORY_SEPARATOR), $separator, $path);
+    }
+
+    /**
+     * Obtains the relative path from a path $from to another path $to.
+     *
+     * Both paths passed in $from and $to must be absolute
+     *
+     * NOTE: Path's do not need to exist.
+     */
+    public static function getRelativePath(string $from, string $to): string
+    {
+        $from = self::normalize($from);
+        $to = self::normalize($to);
+
+        if ('/' !== $from[0]) {
+            throw new InvalidArgumentException('$from argument is not an absolute path');
+        }
+
+        if ('/' !== $to[0]) {
+            throw new InvalidArgumentException('$to argument is not an absolute path');
+        }
+
+        $from = explode('/', rtrim($from, '/'));
+        $to = explode('/', rtrim($to, '/'));
+        $relPath = $to;
+
+        $fromAmount = count($from);
+
+        foreach ($from as $depth => $dir) {
+            if ($dir === $to[$depth]) {
+                array_shift($relPath);
+                continue;
+            }
+
+            $remaining = $fromAmount - $depth;
+
+            if ($remaining > 1) {
+                $relPath = array_pad(
+                    $relPath,
+                    (count($relPath) + $remaining - 1) * -1,
+                    '..'
+                );
+                break;
+            }
+
+            $relPath[0] = sprintf('.%s%s', \DIRECTORY_SEPARATOR, $relPath[0]);
+        }
+
+        return implode(\DIRECTORY_SEPARATOR, $relPath);
+    }
 }

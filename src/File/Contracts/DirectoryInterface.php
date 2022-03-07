@@ -9,6 +9,7 @@ use LDL\File\Exception\FileExistsException;
 use LDL\File\Exception\FileReadException;
 use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
+use LDL\Framework\Base\Exception\InvalidArgumentException;
 
 interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterface, FilePermissionsWriteInterface, LinkableInterface
 {
@@ -67,4 +68,13 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
      * @param iterable ...$pieces
      */
     public function mkpath(...$pieces): string;
+
+    /**
+     * Obtains the relative path from the directory's path to another path, the path must be absolute.
+     *
+     * NOTE: The $to path does not need to exist
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getRelativePath(string $to): string;
 }

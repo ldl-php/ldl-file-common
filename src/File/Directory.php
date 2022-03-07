@@ -67,6 +67,11 @@ final class Directory implements DirectoryInterface
         return new Directory(dirname($this->path, $levels), $this->_tObserveTreeTrait);
     }
 
+    public function getRelativePath(string $to): string
+    {
+        return FilePathHelper::getRelativePath($this->path, $to);
+    }
+
     public static function create(string $path, int $permissions = 0755, bool $force = false): DirectoryInterface
     {
         return DirectoryHelper::create($path, $permissions, $force);
