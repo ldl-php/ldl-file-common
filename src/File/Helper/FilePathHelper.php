@@ -77,6 +77,8 @@ final class FilePathHelper
      * Both paths passed in $from and $to must be absolute
      *
      * NOTE: Path's do not need to exist.
+     *
+     * @TODO Make this method smarter, it only works partially
      */
     public static function getRelativePath(string $from, string $to): string
     {
@@ -105,11 +107,13 @@ final class FilePathHelper
 
             $remaining = $fromAmount - $depth;
 
-            $relPath = array_pad(
-                $relPath,
-                (count($relPath) + $remaining) * -1,
-                '..'
-            );
+            if ($remaining > 1) {
+                $relPath = array_pad(
+                    $relPath,
+                    (count($relPath) + $remaining) * -1,
+                    '..'
+                );
+            }
         }
 
         $path = implode('/', $relPath);
