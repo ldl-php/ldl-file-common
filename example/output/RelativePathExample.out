@@ -1,5 +1,5 @@
 Create test files ...
-Get relative path from /etc/cron.d to /tmp
-string(6) "../tmp"
+Get relative path from /etc/cron.d to /etc/cron.d/temp
+string(6) "./temp"
 Try to create a relative path from a non-absolute path, EXCEPTION must be thrown
 OK: Exception $from argument is not an absolute path

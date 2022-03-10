@@ -37,6 +37,11 @@ final class Directory implements DirectoryInterface
     private $path;
 
     /**
+     * @var string
+     */
+    private $realPath;
+
+    /**
      * @var bool
      */
     private $isDeleted = false;
@@ -48,13 +53,14 @@ final class Directory implements DirectoryInterface
      */
     public function __construct(string $path, FileTreeInterface $tree = null)
     {
+        $this->_tObserveTreeTrait = $tree;
+
         if (is_dir($path)) {
+            $this->realPath = realpath($path);
             $this->path = $path;
 
             return;
         }
-
-        $this->_tObserveTreeTrait = $tree;
 
         throw new FileTypeException(sprintf('File %s does not exists or is not a directory, if you wish to create it, use %s::create', $path, __CLASS__));
     }
@@ -65,6 +71,13 @@ final class Directory implements DirectoryInterface
         $this->checkIfDeleted(__METHOD__);
 
         return new Directory(dirname($this->path, $levels), $this->_tObserveTreeTrait);
+    }
+
+    public function getRealPath(): string
+    {
+        $this->checkIfDeleted(__METHOD__);
+
+        return $this->realPath;
     }
 
     public function getRelativePath(string $to): string
