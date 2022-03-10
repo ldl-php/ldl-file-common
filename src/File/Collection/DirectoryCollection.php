@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace LDL\File\Collection;
 
@@ -34,9 +36,9 @@ final class DirectoryCollection extends AbstractTypedCollection implements Direc
         $data = new StringCollection($directories);
 
         $items = new self();
-        foreach($data as $key => $directory){
+        foreach ($data as $key => $directory) {
             try {
-                $items->append($directory instanceof DirectoryInterface ? $directory : new Directory((string)$directory), $key);
+                $items->append($directory instanceof DirectoryInterface ? $directory : new Directory((string) $directory), $key);
             } catch (\Throwable $e) {
                 throw new ArrayFactoryException($e->getMessage(), $e->getCode(), $e);
             }
@@ -46,16 +48,24 @@ final class DirectoryCollection extends AbstractTypedCollection implements Direc
     }
 
     /**
-     * @param iterable $items
-     * @return DirectoryCollectionInterface
      * @throws IterableFactoryException
      */
     public static function fromIterable(iterable $items): DirectoryCollectionInterface
     {
         try {
             return self::fromArray(IterableHelper::toArray($items));
-        }catch(ArrayFactoryException $e){
-            throw new IterableFactoryException($e->getMessage(),$e->getCode(), $e);
+        } catch (ArrayFactoryException $e) {
+            throw new IterableFactoryException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function getRealPaths(): iterable
+    {
+        /**
+         * @var DirectoryInterface $directory
+         */
+        foreach ($this as $directory) {
+            yield $directory->getRealPath();
         }
     }
 }
