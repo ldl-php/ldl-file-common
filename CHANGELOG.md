@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Added
 
+- feature/1201948255840038 - Add Directory::getRealPath() : string
 - feature/1201927806182806 - FilePathHelper::getRelativePath(string $from, string $to) : string
 - feature/1201913358758253 - Add FileHelper::createSysTempFile() : FileInterface
 - feature/1201913358758249 - Add DirectoryHelper::getSysTempDir() : DirectoryInterface

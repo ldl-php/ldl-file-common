@@ -77,4 +77,12 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
      * @throws InvalidArgumentException
      */
     public function getRelativePath(string $to): string;
+
+    /**
+     * Returns the real directory path. This makes most sense when the Directory
+     * instance was created from a relative path (such as ./directory_name).
+     *
+     * @throws FileExistsException (In case the directory has been moved or deleted)
+     */
+    public function getRealPath(): string;
 }
