@@ -10,6 +10,7 @@ use LDL\File\Exception\FileReadException;
 use LDL\File\Exception\FileTypeException;
 use LDL\File\Exception\FileWriteException;
 use LDL\Framework\Base\Exception\InvalidArgumentException;
+use LDL\Type\Collection\Interfaces\Type\StringCollectionInterface;
 
 interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterface, FilePermissionsWriteInterface, LinkableInterface
 {
@@ -68,6 +69,11 @@ interface DirectoryInterface extends LDLFileInterface, FilePermissionsReadInterf
      * @param iterable ...$pieces
      */
     public function mkpath(...$pieces): string;
+
+    /**
+     * Takes in an iterable $paths and creates a path for each $paths prefixed by the current directory.
+     */
+    public function mkpaths(iterable $paths): StringCollectionInterface;
 
     /**
      * Obtains the relative path from the directory's path to another path, the path must be absolute.

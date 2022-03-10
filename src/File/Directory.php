@@ -23,6 +23,9 @@ use LDL\File\Traits\FileDateTrait;
 use LDL\File\Traits\FileNameTrait;
 use LDL\File\Traits\FileObserveTreeTrait;
 use LDL\File\Traits\FileOwnershipTrait;
+use LDL\Framework\Helper\IterableHelper;
+use LDL\Type\Collection\Interfaces\Type\StringCollectionInterface;
+use LDL\Type\Collection\Types\String\StringCollection;
 
 final class Directory implements DirectoryInterface
 {
@@ -231,7 +234,16 @@ final class Directory implements DirectoryInterface
         return FilePathHelper::createAbsolutePath($this->getPath(), ...$pieces);
     }
 
-    //<editor-fold desc="ToStringInterface Methods">
+    public function mkpaths(iterable $paths): StringCollectionInterface
+    {
+        return new StringCollection(
+            IterableHelper::map($paths, function ($p): string {
+                return $this->mkpath($p);
+            })
+        );
+    }
+
+    // <editor-fold desc="ToStringInterface Methods">
     public function toString(): string
     {
         return $this->path;
@@ -241,9 +253,9 @@ final class Directory implements DirectoryInterface
     {
         return $this->toString();
     }
-    //</editor-fold>
+    // </editor-fold>
 
-    //<editor-fold desc="Private methods">
+    // <editor-fold desc="Private methods">
     /**
      * @throws FileExistsException
      */
@@ -257,5 +269,5 @@ final class Directory implements DirectoryInterface
 
         throw new FileExistsException($msg);
     }
-    //</editor-fold>
+    // </editor-fold>
 }
